@@ -2,6 +2,7 @@
 
 class ArticlesController < ApplicationController
   def index
-    render html: "This is index action of Article controller"
+    articles = Article.all
+    render status: :ok, json: { articles: articles }
   end
 end
