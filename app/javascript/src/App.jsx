@@ -7,6 +7,8 @@ import { setAuthHeaders } from "apis/axios";
 import { initializeLogger } from "common/logger";
 import Dashboard from "components/Dashboard";
 
+import CreateArticle from "./components/Articles/CreateArticle";
+
 const App = () => {
   const [loading, setLoading] = useState(true);
   useEffect(() => {
@@ -28,6 +30,7 @@ const App = () => {
     <Router>
       <Switch>
         <Route exact path="/" component={Dashboard} />
+        <Route exact path="/articles/create" component={CreateArticle} />
       </Switch>
     </Router>
   );
