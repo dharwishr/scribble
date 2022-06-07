@@ -1,5 +1,8 @@
 import React from "react";
 
+import { ExternalLink } from "@bigbinary/neeto-icons";
+import { Button } from "@bigbinary/neetoui";
+
 import NavItem from "./NavItem";
 
 const NavBar = () => (
@@ -8,20 +11,26 @@ const NavBar = () => (
       <div className="flex h-16 justify-between">
         <div className="flex px-2 lg:px-0">
           <div className="hidden lg:flex">
-            <NavItem name="Todos" path="/" />
-            <NavItem name="Add" iconClass="ri-add-fill" path="/tasks/create" />
+            <NavItem name="Scribble" textColor="text-black-500" />
+            <NavItem
+              name="Articles"
+              textColor="neeto-ui-text-gray-500 hover:text-indigo-500 active:text-indigo-500"
+              path="/"
+            />
+            <NavItem
+              name="Settings"
+              textColor="neeto-ui-text-gray-500 hover:text-indigo-500 active:text-indigo-500"
+              path="/tasks/create"
+            />
           </div>
         </div>
         <div className="flex items-center justify-end">
-          <a
-            className="transition focus:outline-none inline-flex cursor-pointer items-center
-             border-b-2 border-transparent px-1 pt-1
-             text-sm font-semibold leading-5 text-bb-gray-600
-             text-opacity-50 duration-150 ease-in-out
-             hover:text-bb-gray-600 focus:text-bb-gray-700"
-          >
-            LogOut
-          </a>
+          <Button
+            label="Preview"
+            onClick={function noRefCheck() {}}
+            icon={ExternalLink}
+            style="secondary"
+          />
         </div>
       </div>
     </div>
