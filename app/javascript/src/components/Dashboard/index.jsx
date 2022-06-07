@@ -3,8 +3,12 @@ import React, { useState, useEffect } from "react";
 import { Plus, Search } from "@bigbinary/neeto-icons";
 import { PageLoader } from "@bigbinary/neetoui";
 import { Typography } from "@bigbinary/neetoui";
+import { Button } from "@bigbinary/neetoui";
+import { Dropdown } from "@bigbinary/neetoui";
+import { Input } from "@bigbinary/neetoui";
 import { MenuBar } from "@bigbinary/neetoui/layouts";
 import { Container } from "@bigbinary/neetoui/layouts";
+import { SubHeader } from "@bigbinary/neetoui/layouts";
 
 import NavBar from "../NavBar";
 
@@ -87,7 +91,40 @@ const Dashboard = () => {
           <MenuBar.Block label="Middle-East" count={60} />
           <MenuBar.Block label="Asia" count={60} />
         </MenuBar>
-        <Container></Container>
+        <Container>
+          <SubHeader
+            rightActionBlock={
+              <>
+                <Input
+                  placeholder="Search"
+                  // onChange={(e) => setInput(e.target.value)}
+                  prefix={<Search />}
+                  // value={input}
+                />
+                <Dropdown
+                  buttonStyle="secondary"
+                  label="Columns"
+                  position="bottom-end"
+                >
+                  <li>Option 1</li>
+                  <li>Option 2</li>
+                  <li>Option 3</li>
+                  <li>Option 4</li>
+                  <li>Option 5</li>
+                </Dropdown>
+                <Button
+                  label="Add New Article"
+                  icon={Plus}
+                  tooltipProps={{
+                    content: "Top",
+                    position: "top",
+                  }}
+                />
+              </>
+            }
+            className={"pt-6"}
+          />
+        </Container>
       </div>
     </div>
   );

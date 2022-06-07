@@ -12,12 +12,23 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_05_30_062753) do
+ActiveRecord::Schema.define(version: 2022_06_07_150653) do
 
   create_table "articles", force: :cascade do |t|
     t.string "title"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.string "slug", null: false
+    t.string "body", null: false
+    t.string "author", null: false
+    t.integer "assigned_category_id"
   end
 
+  create_table "categories", force: :cascade do |t|
+    t.string "category"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
+  add_foreign_key "articles", "categories", column: "assigned_category_id"
 end
