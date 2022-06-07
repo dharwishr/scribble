@@ -20,7 +20,7 @@ const NavBar = () => (
             <NavItem
               name="Settings"
               textColor="neeto-ui-text-gray-500 hover:text-indigo-500 active:text-indigo-500"
-              path="/tasks/create"
+              path="/settings"
             />
           </div>
         </div>
