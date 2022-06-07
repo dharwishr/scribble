@@ -11,7 +11,7 @@ const NavBar = () => (
       <div className="flex h-16 justify-between">
         <div className="flex px-2 lg:px-0">
           <div className="hidden lg:flex">
-            <NavItem name="Scribble" textColor="text-black-500" />
+            <NavItem name="Scribble" textColor="text-black-500" path="/" />
             <NavItem
               name="Articles"
               textColor="neeto-ui-text-gray-500 hover:text-indigo-500 active:text-indigo-500"
