@@ -1,46 +1,65 @@
 import React from "react";
-import { useState } from "react";
 import { useEffect } from "react";
 
-import { PageLoader } from "@bigbinary/neetoui";
 import { Textarea } from "@bigbinary/neetoui";
 import { Input } from "@bigbinary/neetoui";
-import { Dropdown } from "@bigbinary/neetoui";
 import { Button } from "@bigbinary/neetoui";
+import Select from "react-select";
 
-const ArticleForm = () => {
-  const [pageLoading, setPageLoading] = useState(true);
-  const listItems = ["Hello", "1234"];
+const ArticleForm = ({
+  type = "create",
+  title,
+  body,
+  setTitle,
+  setBody,
+  setAuthor,
+  categories,
+  setCategoryId,
+  loading,
+  handleSubmit,
+}) => {
+  // const categoryOptions = categories.map(category => ({
+  //   value: category.id,
+  //   label: category.category,
+  // }));
   useEffect(() => {
-    setPageLoading(false);
+    setAuthor("Oliver Smith");
+    setCategoryId("2");
   }, []);
 
-  if (pageLoading) {
-    return <PageLoader />;
-  }
-
   return (
-    <form className="mx-auto max-w-lg">
-      <Input label="Article Title" required={true} />
-      <Textarea label="Article Body" required={true} />
+    <form className="mx-auto max-w-lg" onSubmit={handleSubmit}>
+      <Input
+        label="Article Title"
+        required={true}
+        value={title}
+        onChange={e => setTitle(e.target.value.slice(0, 50))}
+      />
+      <Textarea
+        label="Article Body"
+        required={true}
+        value={body}
+        onChange={e => setBody(e.target.value)}
+      />
       <div className="flex">
-        <Dropdown position="bottom" label="Dropdown" isMultiLevel>
-          {listItems.map((item, idx) => (
+        {/* <Dropdown position="bottom" label="Dropdown" isMultiLevel >
+          {categories.map((item, idx) => (
             <li key={idx}>{item}</li>
           ))}
-          <Dropdown
-            position="right-start"
-            customTarget={<li>Another Dropdown</li>}
-            onClick={e => e.stopPropagation()}
-          >
-            {listItems.map((item, idx) => (
-              <li key={idx}>{item}</li>
-            ))}
-          </Dropdown>
-        </Dropdown>
+        </Dropdown> */}
+        <Select
+          options={categories}
+          // defaultValue={defaultOption}
+          // onChange={e => setCategoryId(e.value)}
+          isSearchable
+        />
       </div>
 
-      <Button label="Button" onClick={function noRefCheck() {}} style="text" />
+      <Button
+        type="submit"
+        buttonText={type === "create" ? "Create Task" : "Update Task"}
+        loading={loading}
+      />
     </form>
   );
 };
