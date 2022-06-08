@@ -10,27 +10,42 @@ import { MenuBar } from "@bigbinary/neetoui/layouts";
 import { Container } from "@bigbinary/neetoui/layouts";
 import { SubHeader } from "@bigbinary/neetoui/layouts";
 
+import articlesApi from "apis/articles";
+import categoriesApi from "apis/categories";
+
 import NavBar from "../NavBar";
 
 const Dashboard = () => {
   const [showMenu, setShowMenu] = useState(false);
   const [isSearchCollapsed, setIsSearchCollapsed] = useState(true);
-  // const [tasks, setTasks] = useState([]);
+  const [tasks, setTasks] = useState([]);
+  const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // const fetchTasks = async () => {
-  //   try {
-  //     const response = await articlesApi.list();
-  //     setTasks(response.data.tasks);
-  //     setLoading(false);
-  //   } catch (error) {
-  //     logger.error(error);
-  //     setLoading(false);
-  //   }
-  // };
+  const fetchTasks = async () => {
+    try {
+      const response = await articlesApi.list();
+      setTasks(response.data.tasks);
+      setLoading(false);
+    } catch (error) {
+      logger.error(error);
+      setLoading(false);
+    }
+  };
+  const fetchCategories = async () => {
+    try {
+      const response = await categoriesApi.list();
+      setCategories(response.data.categories);
+      setLoading(false);
+    } catch (error) {
+      logger.error(error);
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    // fetchTasks();
+    fetchTasks();
+    fetchCategories();
     setLoading(false);
     setShowMenu(!showMenu);
   }, []);
@@ -124,6 +139,8 @@ const Dashboard = () => {
             }
             className={"pt-6"}
           />
+          <p>{tasks}</p>
+          <p>{categories}</p>
         </Container>
       </div>
     </div>
