@@ -2,8 +2,6 @@ import React, { useState, useEffect } from "react";
 
 import { PageLoader } from "@bigbinary/neetoui";
 
-// import tasksApi from "apis/tasks";
-// import usersApi from "apis/users";
 import Container from "components/Container";
 
 import ArticleForm from "./Form/ArticleForm";
