@@ -9,6 +9,7 @@ import { Input } from "@bigbinary/neetoui";
 import { MenuBar } from "@bigbinary/neetoui/layouts";
 import { Container } from "@bigbinary/neetoui/layouts";
 import { SubHeader } from "@bigbinary/neetoui/layouts";
+import { useHistory } from "react-router-dom";
 
 import articlesApi from "apis/articles";
 import categoriesApi from "apis/categories";
@@ -16,6 +17,7 @@ import categoriesApi from "apis/categories";
 import NavBar from "../NavBar";
 
 const Dashboard = () => {
+  const history = useHistory();
   const [showMenu, setShowMenu] = useState(false);
   const [isSearchCollapsed, setIsSearchCollapsed] = useState(true);
   const [tasks, setTasks] = useState([]);
@@ -128,6 +130,7 @@ const Dashboard = () => {
                   <li>Option 5</li>
                 </Dropdown>
                 <Button
+                  onClick={() => history.push("/article/create")}
                   label="Add New Article"
                   icon={Plus}
                   tooltipProps={{

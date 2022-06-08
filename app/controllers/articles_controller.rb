@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class ArticlesController < ApplicationController
+  before_action :load_article!, only: %i[show update destroy]
   def index
     articles = Article.all
     render status: :ok, json: { articles: articles }
@@ -19,7 +20,7 @@ class ArticlesController < ApplicationController
   end
 
   def show
-    respond_with_json({ article: @article, assigned_category: @article.assigned_category })
+    respond_with_json({ article: @article, assigned_category: @article.assigned_category_id })
   end
 
   def destroy
@@ -28,6 +29,10 @@ class ArticlesController < ApplicationController
   end
 
   private
+
+    def article_params
+      params.require(:article).permit(:title, :body, :author, :assigned_category_id,)
+    end
 
     def load_article!
       @article = Article.find_by!(slug: params[:slug])

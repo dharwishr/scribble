@@ -6,6 +6,11 @@ const show = slug => axios.get(`/articles/${slug}`);
 
 const create = payload => axios.post("/articles/", payload);
 
-const articlesApi = { list, show, create };
+const update = ({ slug, payload, quiet = false }) => {
+  const path = quiet ? `/articles/${slug}?quiet` : `/articles/${slug}`;
+  return axios.put(path, payload);
+};
+
+const articlesApi = { list, show, create, update };
 
 export default articlesApi;

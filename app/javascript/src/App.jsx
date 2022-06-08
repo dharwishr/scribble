@@ -9,6 +9,7 @@ import Dashboard from "components/Dashboard";
 import Settings from "components/Settings";
 
 import CreateArticle from "./components/Articles/CreateArticle";
+import EditArticle from "./components/Articles/EditArticle";
 
 const App = () => {
   const [loading, setLoading] = useState(true);
@@ -31,7 +32,8 @@ const App = () => {
     <Router>
       <Switch>
         <Route exact path="/" component={Dashboard} />
-        <Route exact path="/articles/create" component={CreateArticle} />
+        <Route exact path="/article/create" component={CreateArticle} />
+        <Route exact path="/article/:slug/edit" component={EditArticle} />
         <Route exact path="/settings" component={Settings} />
       </Switch>
     </Router>
