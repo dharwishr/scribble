@@ -14,15 +14,20 @@ import { useHistory } from "react-router-dom";
 import articlesApi from "apis/articles";
 import categoriesApi from "apis/categories";
 
+import InputBar from "../Common/InputBar";
 import NavBar from "../NavBar";
 
 const Dashboard = () => {
   const history = useHistory();
   const [showMenu, setShowMenu] = useState(false);
   const [isSearchCollapsed, setIsSearchCollapsed] = useState(true);
+  const [isInputCollapsed, setIsInputCollapsed] = useState(true);
   const [tasks, setTasks] = useState([]);
   const [categories, setCategories] = useState([]);
+  const [category, setCategory] = useState();
   const [loading, setLoading] = useState(true);
+  const [search, setSearch] = useState();
+  const [foundCategories, setFoundCategories] = useState();
 
   const fetchTasks = async () => {
     try {
@@ -38,16 +43,44 @@ const Dashboard = () => {
     try {
       const response = await categoriesApi.list();
       setCategories(response.data.categories);
+      setFoundCategories(response.data.categories);
       setLoading(false);
     } catch (error) {
       logger.error(error);
       setLoading(false);
     }
   };
+  const handleSubmit = async event => {
+    event.preventDefault();
+    try {
+      await categoriesApi.create({
+        category: { category },
+      });
+    } catch (error) {
+      logger.error(error);
+    }
+    setIsInputCollapsed(true);
+    loadData();
+  };
+  const loadData = async () => {
+    await fetchTasks();
+    await fetchCategories();
+  };
+  const searchFilter = e => {
+    const keyword = e.target.value;
+    if (keyword !== "") {
+      const results = categories.filter(each =>
+        each.category.toLowerCase().startsWith(keyword.toLowerCase())
+      );
+      setFoundCategories(results);
+    } else {
+      setFoundCategories(categories);
+    }
+    setSearch(keyword);
+  };
 
   useEffect(() => {
-    fetchTasks();
-    fetchCategories();
+    loadData();
     setLoading(false);
     setShowMenu(!showMenu);
   }, []);
@@ -87,7 +120,7 @@ const Dashboard = () => {
               },
               {
                 icon: Plus,
-                onClick: () => setIsSearchCollapsed(!isSearchCollapsed),
+                onClick: () => setIsInputCollapsed(!isInputCollapsed),
               },
             ]}
           >
@@ -101,12 +134,28 @@ const Dashboard = () => {
             </Typography>
           </MenuBar.SubTitle>
           <MenuBar.Search
+            type="search"
+            onChange={searchFilter}
+            value={search}
             collapse={isSearchCollapsed}
             onCollapse={() => setIsSearchCollapsed(true)}
+            placeholder="Search"
           />
-          <MenuBar.Block label="Europe" count={80} />
-          <MenuBar.Block label="Middle-East" count={60} />
-          <MenuBar.Block label="Asia" count={60} />
+          <InputBar
+            collapse={isInputCollapsed}
+            category={category}
+            handleSubmit={handleSubmit}
+            loading={loading}
+            setCategory={setCategory}
+            onCollapse={() => setIsInputCollapsed(true)}
+          />
+          {foundCategories && foundCategories.length > 0 ? (
+            foundCategories.map(each => (
+              <MenuBar.Block key={each.id} label={each.category} count={80} />
+            ))
+          ) : (
+            <MenuBar.Block label="No Category Found" />
+          )}
         </MenuBar>
         <Container>
           <SubHeader
@@ -143,7 +192,6 @@ const Dashboard = () => {
             className={"pt-6"}
           />
           <p>{tasks}</p>
-          <p>{categories}</p>
         </Container>
       </div>
     </div>
