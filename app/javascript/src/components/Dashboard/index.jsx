@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from "react";
 
 import { Plus, Search } from "@bigbinary/neeto-icons";
-import { PageLoader } from "@bigbinary/neetoui";
-import { Typography } from "@bigbinary/neetoui";
-import { Button } from "@bigbinary/neetoui";
-import { Dropdown } from "@bigbinary/neetoui";
-import { Input } from "@bigbinary/neetoui";
-import { MenuBar } from "@bigbinary/neetoui/layouts";
-import { Container } from "@bigbinary/neetoui/layouts";
-import { SubHeader } from "@bigbinary/neetoui/layouts";
+import {
+  PageLoader,
+  Table,
+  Typography,
+  Button,
+  Dropdown,
+  Input,
+} from "@bigbinary/neetoui";
+import { MenuBar, Container, SubHeader } from "@bigbinary/neetoui/layouts";
 import { useHistory } from "react-router-dom";
 
 import articlesApi from "apis/articles";
@@ -22,23 +23,27 @@ const Dashboard = () => {
   const [showMenu, setShowMenu] = useState(false);
   const [isSearchCollapsed, setIsSearchCollapsed] = useState(true);
   const [isInputCollapsed, setIsInputCollapsed] = useState(true);
-  const [tasks, setTasks] = useState([]);
-  const [categories, setCategories] = useState([]);
+  const [articles, setArticles] = useState([]);
+  const [searchArticle, setSearchArticle] = useState();
+  const [foundArticles, setFoundArticles] = useState([]);
   const [category, setCategory] = useState();
-  const [loading, setLoading] = useState(true);
-  const [search, setSearch] = useState();
+  const [searchCategory, setSearchCategory] = useState();
+  const [categories, setCategories] = useState([]);
   const [foundCategories, setFoundCategories] = useState();
+  const [loading, setLoading] = useState(true);
 
   const fetchTasks = async () => {
     try {
       const response = await articlesApi.list();
-      setTasks(response.data.tasks);
+      setArticles(response.data.tasks);
+      setFoundArticles(response.data.tasks);
       setLoading(false);
     } catch (error) {
       logger.error(error);
       setLoading(false);
     }
   };
+
   const fetchCategories = async () => {
     try {
       const response = await categoriesApi.list();
@@ -50,6 +55,7 @@ const Dashboard = () => {
       setLoading(false);
     }
   };
+
   const handleSubmit = async event => {
     event.preventDefault();
     try {
@@ -62,11 +68,13 @@ const Dashboard = () => {
     setIsInputCollapsed(true);
     loadData();
   };
+
   const loadData = async () => {
     await fetchTasks();
     await fetchCategories();
   };
-  const searchFilter = e => {
+
+  const searchWhichCategory = e => {
     const keyword = e.target.value;
     if (keyword !== "") {
       const results = categories.filter(each =>
@@ -76,7 +84,20 @@ const Dashboard = () => {
     } else {
       setFoundCategories(categories);
     }
-    setSearch(keyword);
+    setSearchCategory(keyword);
+  };
+
+  const searchWhichArticle = e => {
+    const keyword = e.target.value;
+    if (keyword !== "") {
+      const results = articles.filter(article =>
+        article.title.toLowerCase().startsWith(keyword.toLowerCase())
+      );
+      setFoundArticles(results);
+    } else {
+      setFoundArticles(articles);
+    }
+    setSearchArticle(keyword);
   };
 
   useEffect(() => {
@@ -92,16 +113,6 @@ const Dashboard = () => {
       </div>
     );
   }
-
-  // if (either(isNil, isEmpty)(tasks)) {
-  //   return (
-  //     <Container>
-  //       <h1 className="text-center text-xl leading-5">
-  //         You have no tasks assigned 😔
-  //       </h1>
-  //     </Container>
-  //   );
-  // }
 
   return (
     <div>
@@ -135,8 +146,8 @@ const Dashboard = () => {
           </MenuBar.SubTitle>
           <MenuBar.Search
             type="search"
-            onChange={searchFilter}
-            value={search}
+            onChange={searchWhichCategory}
+            value={searchCategory}
             collapse={isSearchCollapsed}
             onCollapse={() => setIsSearchCollapsed(true)}
             placeholder="Search"
@@ -163,9 +174,9 @@ const Dashboard = () => {
               <>
                 <Input
                   placeholder="Search"
-                  // onChange={(e) => setInput(e.target.value)}
+                  onChange={searchWhichArticle}
+                  value={searchArticle}
                   prefix={<Search />}
-                  // value={input}
                 />
                 <Dropdown
                   buttonStyle="secondary"
@@ -191,7 +202,36 @@ const Dashboard = () => {
             }
             className={"pt-6"}
           />
-          <p>{tasks}</p>
+          <Table
+            columnData={[
+              {
+                dataIndex: "title",
+                key: "title",
+                title: "TITLE",
+                width: 75,
+              },
+
+              {
+                dataIndex: "date",
+                key: "date",
+                title: "DATE",
+                width: 75,
+              },
+              {
+                dataIndex: "author",
+                key: "author",
+                title: "AUTHOR",
+                width: 75,
+              },
+            ]}
+            currentPageNumber={1}
+            defaultPageSize={10}
+            handlePageChange={function noRefCheck() {}}
+            onRowClick={function noRefCheck() {}}
+            onRowSelect={function noRefCheck() {}}
+            rowData={[]}
+          />
+          {foundArticles}
         </Container>
       </div>
     </div>
