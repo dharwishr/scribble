@@ -161,9 +161,15 @@ const Dashboard = () => {
             onCollapse={() => setIsInputCollapsed(true)}
           />
           {foundCategories && foundCategories.length > 0 ? (
-            foundCategories.map(each => (
-              <MenuBar.Block key={each.id} label={each.category} count={80} />
-            ))
+            foundCategories
+              .sort((a, b) => (a.position > b.position ? 1 : -1))
+              .map(each => (
+                <MenuBar.Block
+                  key={each.position}
+                  label={each.category}
+                  count={80}
+                />
+              ))
           ) : (
             <MenuBar.Block label="No Category Found" />
           )}
