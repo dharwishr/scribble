@@ -8,6 +8,12 @@ class CategoriesController < ApplicationController
 
   def create
     category = Category.new(category_params)
+    last_position_number = Category.maximum(:position)
+    if last_position_number
+      category.position = last_position_number.to_i + 1
+    else
+      category.position = 1
+    end
     category.save!
     respond_with_success("successfully_created")
   end
@@ -26,7 +32,7 @@ class CategoriesController < ApplicationController
   private
 
     def category_params
-      params.require(:category).permit(:id, :category)
+      params.require(:category).permit(:id, :category, :position)
     end
 
     def load_category!
