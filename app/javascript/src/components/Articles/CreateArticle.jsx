@@ -22,7 +22,13 @@ const CreateArticle = () => {
     setLoading(true);
     try {
       await articlesApi.create({
-        article: { title, body, author, assigned_category_id: categoryId },
+        article: {
+          title,
+          body,
+          author,
+          assigned_category_id: categoryId,
+          status: "published",
+        },
       });
       setLoading(false);
       history.push("/");

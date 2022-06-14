@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class Article < ApplicationRecord
+  enum status: { draft: 0, published: 1 }
   belongs_to :category, foreign_key: "assigned_category_id", class_name: "Category"
   validates :title, presence: true, length: { maximum: 50 }
   validates :slug, uniqueness: true
@@ -8,6 +9,15 @@ class Article < ApplicationRecord
   before_create :set_slug
 
   private
+
+    def self.of_status(status)
+      if status == :draft
+        articles = draft.order("updated_at DESC")
+      else
+        articles = published.order("updated_at DESC")
+      end
+      articles
+    end
 
     def set_slug
       itr = 1

@@ -4,7 +4,9 @@ class ArticlesController < ApplicationController
   before_action :load_article!, only: %i[show update destroy]
   def index
     articles = Article.all
-    render status: :ok, json: { articles: articles }
+    @draft_articles = articles.of_status(:draft)
+    @published_articles = articles.of_status(:published)
+    puts "draft", @draft_articles
   end
 
   def create
@@ -16,7 +18,7 @@ class ArticlesController < ApplicationController
   def update
     article = Article.find_by!(slug: params[:slug])
     article.update!(article_params)
-    respond_with_success("successfully_updated")
+    respond_with_success("successfully_updated") unless params.key?(:quiet)
   end
 
   def show
@@ -31,7 +33,7 @@ class ArticlesController < ApplicationController
   private
 
     def article_params
-      params.require(:article).permit(:title, :body, :author, :assigned_category_id,)
+      params.require(:article).permit(:title, :body, :author, :assigned_category_id, :status)
     end
 
     def load_article!

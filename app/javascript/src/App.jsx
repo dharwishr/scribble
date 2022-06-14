@@ -10,6 +10,7 @@ import Settings from "components/Settings";
 
 import CreateArticle from "./components/Articles/CreateArticle";
 import EditArticle from "./components/Articles/EditArticle";
+import Eui from "./components/Eui";
 
 const App = () => {
   const [loading, setLoading] = useState(true);
@@ -35,6 +36,7 @@ const App = () => {
         <Route exact path="/article/create" component={CreateArticle} />
         <Route exact path="/article/:slug/edit" component={EditArticle} />
         <Route exact path="/settings" component={Settings} />
+        <Route exact path="/public/:slug" component={Eui} />
       </Switch>
     </Router>
   );
