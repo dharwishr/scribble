@@ -31,11 +31,23 @@ const Dashboard = () => {
   const [categories, setCategories] = useState([]);
   const [foundCategories, setFoundCategories] = useState();
   const [loading, setLoading] = useState(true);
-  const fetchTasks = async () => {
+  const [counts, setCounts] = useState({
+    draft: "",
+    published: "",
+    total: "",
+  });
+  const fetchArticles = async () => {
     try {
       const response = await articlesApi.list();
-      setArticles(response.data.tasks);
-      setFoundArticles(response.data.tasks);
+      setArticles(response.data.articles);
+      setFoundArticles(response.data.articles);
+      setCounts({
+        draft: response.data.articles["draft_count"],
+        published: response.data.articles["published_count"],
+        total:
+          response.data.articles["draft_count"] +
+          response.data.articles["published_count"],
+      });
       setLoading(false);
     } catch (error) {
       logger.error(error);
@@ -69,8 +81,14 @@ const Dashboard = () => {
   };
 
   const loadData = async () => {
-    await fetchTasks();
-    await fetchCategories();
+    try {
+      await fetchArticles();
+      await fetchCategories();
+    } catch (error) {
+      logger.error(error);
+    } finally {
+      setFoundArticles(articles);
+    }
   };
 
   const searchWhichCategory = e => {
@@ -118,9 +136,9 @@ const Dashboard = () => {
       <NavBar></NavBar>
       <div className="flex">
         <MenuBar showMenu={showMenu} title="Articles">
-          <MenuBar.Block label="All" count={13} active />
-          <MenuBar.Block label="Draft" count={2} />
-          <MenuBar.Block label="Published" count={7} />
+          <MenuBar.Block label="All" count={counts.total} active />
+          <MenuBar.Block label="Draft" count={counts.draft} />
+          <MenuBar.Block label="Published" count={counts.published} />
 
           <MenuBar.SubTitle
             iconProps={[
@@ -166,7 +184,7 @@ const Dashboard = () => {
                 <MenuBar.Block
                   key={each.position}
                   label={each.category}
-                  count={80}
+                  count={each.count}
                 />
               ))
           ) : (
