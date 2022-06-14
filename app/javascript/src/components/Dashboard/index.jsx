@@ -31,7 +31,6 @@ const Dashboard = () => {
   const [categories, setCategories] = useState([]);
   const [foundCategories, setFoundCategories] = useState();
   const [loading, setLoading] = useState(true);
-
   const fetchTasks = async () => {
     try {
       const response = await articlesApi.list();
@@ -116,7 +115,7 @@ const Dashboard = () => {
 
   return (
     <div>
-      <NavBar />
+      <NavBar></NavBar>
       <div className="flex">
         <MenuBar showMenu={showMenu} title="Articles">
           <MenuBar.Block label="All" count={13} active />
