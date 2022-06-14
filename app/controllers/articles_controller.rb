@@ -6,7 +6,6 @@ class ArticlesController < ApplicationController
     articles = Article.all
     @draft_articles = articles.of_status(:draft)
     @published_articles = articles.of_status(:published)
-    puts "draft", @draft_articles
   end
 
   def create

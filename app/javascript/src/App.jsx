@@ -36,7 +36,7 @@ const App = () => {
         <Route exact path="/article/create" component={CreateArticle} />
         <Route exact path="/article/:slug/edit" component={EditArticle} />
         <Route exact path="/settings" component={Settings} />
-        <Route exact path="/public/:slug" component={Eui} />
+        <Route exact path="/public/" component={Eui} />
       </Switch>
     </Router>
   );
