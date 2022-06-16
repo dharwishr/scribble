@@ -254,8 +254,8 @@ const Dashboard = () => {
             onRowSelect={function noRefCheck() {}}
             rowData={[]}
           />
-          {foundArticles}
         </Container>
+        {foundArticles}
       </div>
     </div>
   );

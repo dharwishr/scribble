@@ -12,7 +12,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_06_12_162317) do
+ActiveRecord::Schema.define(version: 2022_06_15_011112) do
 
   create_table "articles", force: :cascade do |t|
     t.string "title"
@@ -30,6 +30,28 @@ ActiveRecord::Schema.define(version: 2022_06_12_162317) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.integer "position", null: false
+  end
+
+  create_table "redirections", force: :cascade do |t|
+    t.string "from"
+    t.string "to"
+    t.index ["from"], name: "index_redirections_on_from", unique: true
+  end
+
+  create_table "settings", force: :cascade do |t|
+    t.string "name", null: false
+    t.string "password_digest"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "users", force: :cascade do |t|
+    t.string "name", null: false
+    t.string "email", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.string "authentication_token"
+    t.index ["email"], name: "index_users_on_email", unique: true
   end
 
   add_foreign_key "articles", "categories", column: "assigned_category_id"
