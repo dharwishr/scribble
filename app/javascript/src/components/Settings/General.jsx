@@ -96,7 +96,7 @@ const General = () => {
           onClick={() => setIsPasswordThere(!isPasswordThere)}
           style="text"
         />
-        {fetchedSettings}
+        {logger.error(fetchedSettings)}
       </form>
     </div>
   );

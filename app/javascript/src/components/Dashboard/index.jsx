@@ -255,7 +255,7 @@ const Dashboard = () => {
             rowData={[]}
           />
         </Container>
-        {foundArticles}
+        {logger.error(foundArticles)}
       </div>
     </div>
   );
