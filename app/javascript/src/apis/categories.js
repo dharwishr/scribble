@@ -4,9 +4,9 @@ const list = () => axios.get("/categories");
 
 const create = payload => axios.post("/categories/", payload);
 
-const update = (id, payload) => axios.put(id, payload);
+const update = ({ id, payload }) => axios.put(`/categories/${id}`, payload);
 
-const destroy = id => axios.delete(id);
+const destroy = id => axios.delete(`/categories/${id}`);
 
 const categoriesApi = {
   list,

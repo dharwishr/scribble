@@ -1,0 +1,14 @@
+# frozen_string_literal: true
+
+class CreateUsers < ActiveRecord::Migration[6.1]
+  def change
+    create_table :users do |t|
+      t.string :name
+      t.string :email
+      t.timestamps
+    end
+    add_index :users, :email, unique: true
+    change_column_null :users, :name, false
+    change_column_null :users, :email, false
+  end
+end
