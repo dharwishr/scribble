@@ -56,50 +56,6 @@ const Dashboard = () => {
     }));
     return data;
   };
-  const destroyArticle = slug => slug;
-  const fetchArticles = async () => {
-    try {
-      const response = await articlesApi.list();
-      setArticles(mapArticles(response.data.articles.all));
-      setFoundArticles(mapArticles(response.data.articles.all));
-      setCounts({
-        draft: response.data.articles["draft_count"],
-        published: response.data.articles["published_count"],
-        total:
-          response.data.articles["draft_count"] +
-          response.data.articles["published_count"],
-      });
-      setLoading(false);
-    } catch (error) {
-      logger.error(error);
-      setLoading(false);
-    }
-  };
-  const sortArticles = (
-    status = displayedArticles.status,
-    category = displayedArticles.category
-  ) => {
-    if (status !== "All" && category !== "All") {
-      setDisplayedArticles({ status: status, category: category });
-      setFoundArticles(
-        articles
-          .filter(article => article.status === status)
-          .filter(article => article.category === category)
-      );
-    } else if (status === "All" && category !== "All") {
-      setDisplayedArticles({ status: status, category: category });
-      setFoundArticles(
-        articles.filter(article => article.category === category)
-      );
-    } else if (status !== "All" && category === "All") {
-      setDisplayedArticles({ status: status, category: category });
-      setFoundArticles(articles.filter(article => article.status === status));
-    } else {
-      setDisplayedArticles({ status: status, category: category });
-      setFoundArticles(articles);
-    }
-  };
-
   const articleColumns = [
     {
       title: "TITLE",
@@ -166,6 +122,57 @@ const Dashboard = () => {
       ),
     },
   ];
+  const destroyArticle = async slug => {
+    try {
+      await articlesApi.destroy(slug);
+      fetchCategories();
+    } catch (error) {
+      logger.error(error);
+    }
+  };
+  const fetchArticles = async () => {
+    try {
+      const response = await articlesApi.list();
+      setArticles(mapArticles(response.data.articles.all));
+      setFoundArticles(mapArticles(response.data.articles.all));
+      setCounts({
+        draft: response.data.articles["draft_count"],
+        published: response.data.articles["published_count"],
+        total:
+          response.data.articles["draft_count"] +
+          response.data.articles["published_count"],
+      });
+      setLoading(false);
+    } catch (error) {
+      logger.error(error);
+      setLoading(false);
+    }
+  };
+  const sortArticles = (
+    status = displayedArticles.status,
+    category = displayedArticles.category
+  ) => {
+    if (status !== "All" && category !== "All") {
+      setDisplayedArticles({ status: status, category: category });
+      setFoundArticles(
+        articles
+          .filter(article => article.status === status)
+          .filter(article => article.category === category)
+      );
+    } else if (status === "All" && category !== "All") {
+      setDisplayedArticles({ status: status, category: category });
+      setFoundArticles(
+        articles.filter(article => article.category === category)
+      );
+    } else if (status !== "All" && category === "All") {
+      setDisplayedArticles({ status: status, category: category });
+      setFoundArticles(articles.filter(article => article.status === status));
+    } else {
+      setDisplayedArticles({ status: status, category: category });
+      setFoundArticles(articles);
+    }
+  };
+
   const fetchCategories = async () => {
     try {
       const response = await categoriesApi.list();
