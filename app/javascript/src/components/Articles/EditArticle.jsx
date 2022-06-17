@@ -13,19 +13,25 @@ const EditArticle = () => {
   const [title, setTitle] = useState("");
   const [body, setBody] = useState("");
   const [author, setAuthor] = useState("");
-  const [categories, setCategories] = useState("");
+  const [categories, setCategories] = useState([]);
   const [categoryId, setCategoryId] = useState("");
   const [loading, setLoading] = useState(false);
+  const [articleStatus, setArticleStatus] = useState("draft");
   const [pageLoading, setPageLoading] = useState(true);
   const { slug } = useParams();
 
-  const handleSubmit = async event => {
-    event.preventDefault();
+  const handleSubmit = async () => {
     try {
       await articlesApi.update({
         slug,
         payload: {
-          article: { title, body, author, assigned_category_id: categoryId },
+          article: {
+            title,
+            body,
+            author,
+            assigned_category_id: categoryId,
+            status: articleStatus,
+          },
         },
       });
       setLoading(false);
@@ -53,17 +59,21 @@ const EditArticle = () => {
       setTitle(article.title);
       setBody(article.body);
       setAuthor(article.author);
-      setCategoryId(article.categoryId);
+      setCategoryId({
+        label: article.assigned_category.category,
+        value: article.assigned_category.id,
+      });
     } catch (error) {
       logger.error(error);
     }
   };
-  const loadData = async () => {
-    await fetchCategoryDetails();
-    await fetchArticleDetails();
-  };
+  // const loadData = async () => {
+  //   await fetchCategoryDetails();
+  //   await fetchArticleDetails();
+  // };
   useEffect(() => {
-    loadData();
+    fetchCategoryDetails();
+    fetchArticleDetails();
     setPageLoading(false);
   }, []);
   if (pageLoading) {
@@ -84,9 +94,12 @@ const EditArticle = () => {
         setBody={setBody}
         setAuthor={setAuthor}
         categories={categories}
+        categoryId={categoryId}
         setCategoryId={setCategoryId}
         loading={loading}
         handleSubmit={handleSubmit}
+        articleStatus={articleStatus}
+        setArticleStatus={setArticleStatus}
       />
     </Container>
   );

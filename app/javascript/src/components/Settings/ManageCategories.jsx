@@ -8,7 +8,6 @@ import { Table } from "@bigbinary/neetoui";
 import { Button } from "@bigbinary/neetoui";
 import { Input } from "@bigbinary/neetoui";
 import { Form } from "antd";
-import { arrayMoveImmutable } from "array-move";
 import {
   SortableContainer,
   SortableElement,
@@ -34,20 +33,21 @@ const ManageCategories = () => {
   const fetchCategories = async () => {
     try {
       const response = await categoriesApi.list();
-      const data = response.data.categories.map(category => ({
-        key: category.id,
-        category: category.category,
-        action: category.id,
-        index: category.position,
-      }));
+      const data = response.data.categories
+        .sort((a, b) => a.position - b.position)
+        .map(category => ({
+          key: category.id,
+          category: category.category,
+          action: category.id,
+          index: category.position,
+        }));
       setCategories(data);
+      setDataSource(data);
       // setUpdatedCategories(data);
       setLoading(false);
     } catch (error) {
       logger.error(error);
       setLoading(false);
-    } finally {
-      setDataSource(categories);
     }
   };
   const createCategory = async () => {
@@ -76,6 +76,21 @@ const ManageCategories = () => {
     } finally {
       fetchCategories();
       setEditRow(null);
+    }
+  };
+  const updatePosition = async (id, position) => {
+    try {
+      await categoriesApi.update({
+        id: id,
+        payload: {
+          category: { position: position },
+        },
+      });
+      // history.push("/");
+    } catch (error) {
+      logger.error(error);
+    } finally {
+      fetchCategories();
     }
   };
   const destroyCategory = async key => {
@@ -188,24 +203,13 @@ const ManageCategories = () => {
 
   const SortableItem = SortableElement(props => <tr {...props} />);
   const SortableBody = SortableContainer(props => <tbody {...props} />);
-  // function handleOnDragEnd(result) {
-  //   if (!result.destination) return;
-  //   const items = Array.from(categories);
-  //   const [reorderedItem] = items.splice(result.source.index, 1);
-  //   items.splice(result.destination.index, 0, reorderedItem);
-  //   setUpdatedCategories(items);
-  // }
 
   const onSortEnd = ({ oldIndex, newIndex }) => {
     if (oldIndex !== newIndex) {
-      const newData = arrayMoveImmutable(
-        dataSource.slice(),
-        oldIndex,
-        newIndex
-      ).filter(el => !!el);
-      setDataSource(newData);
+      updatePosition(categories[oldIndex].key, newIndex + 1);
     }
   };
+
   const DraggableContainer = props => (
     <SortableBody
       useDragHandle
@@ -269,7 +273,6 @@ const ManageCategories = () => {
       <Form form={form}>
         <Table
           pagination={false}
-          title={undefined}
           dataSource={categories}
           columns={columns}
           rowKey="index"

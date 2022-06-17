@@ -12,13 +12,13 @@ const CreateArticle = () => {
   const [title, setTitle] = useState("");
   const [body, setBody] = useState("");
   const [author, setAuthor] = useState("");
-  const [categories, setCategories] = useState("");
+  const [categories, setCategories] = useState([]);
   const [categoryId, setCategoryId] = useState("");
   const [loading, setLoading] = useState(false);
+  const [articleStatus, setArticleStatus] = useState("draft");
   const [pageLoading, setPageLoading] = useState(true);
 
-  const handleSubmit = async event => {
-    event.preventDefault();
+  const handleSubmit = async () => {
     setLoading(true);
     try {
       await articlesApi.create({
@@ -26,8 +26,8 @@ const CreateArticle = () => {
           title,
           body,
           author,
-          assigned_category_id: categoryId,
-          status: "published",
+          assigned_category_id: categoryId.value,
+          status: articleStatus,
         },
       });
       setLoading(false);
@@ -67,9 +67,12 @@ const CreateArticle = () => {
         setBody={setBody}
         setAuthor={setAuthor}
         categories={categories}
+        categoryId={categoryId}
         setCategoryId={setCategoryId}
         loading={loading}
         handleSubmit={handleSubmit}
+        articleStatus={articleStatus}
+        setArticleStatus={setArticleStatus}
       />
     </Container>
   );
