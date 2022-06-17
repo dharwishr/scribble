@@ -4,7 +4,6 @@ import { Edit, Delete } from "@bigbinary/neeto-icons";
 import { Alert } from "@bigbinary/neetoui";
 import { PageLoader, Table, Button } from "@bigbinary/neetoui";
 import { Container } from "@bigbinary/neetoui/layouts";
-import { logger } from "@rails/actioncable";
 import { useHistory } from "react-router-dom";
 
 import articlesApi from "apis/articles";
@@ -57,9 +56,7 @@ const Dashboard = () => {
     }));
     return data;
   };
-  const destroyArticle = slug => {
-    logger.error(slug);
-  };
+  const destroyArticle = slug => slug;
   const fetchArticles = async () => {
     try {
       const response = await articlesApi.list();
@@ -201,8 +198,6 @@ const Dashboard = () => {
       await fetchCategories();
     } catch (error) {
       logger.error(error);
-    } finally {
-      // setFoundArticles(articles);
     }
   };
 
