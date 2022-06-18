@@ -7,7 +7,6 @@ import { MenuBar } from "@bigbinary/neetoui/layouts";
 import InputBar from "../Common/InputBar";
 
 const Menu = ({
-  showMenu,
   counts,
   displayedArticles,
   sortArticles,
@@ -17,14 +16,14 @@ const Menu = ({
   setCategory,
   isInputCollapsed,
   setIsInputCollapsed,
-  handleSubmit,
+  createCategory,
   loading,
   foundCategories,
 }) => {
   const [isSearchCollapsed, setIsSearchCollapsed] = useState(true);
 
   return (
-    <MenuBar showMenu={showMenu} title="Articles">
+    <MenuBar showMenu={true} title="Articles">
       <MenuBar.Block
         label="All"
         count={counts.total}
@@ -82,7 +81,7 @@ const Menu = ({
       <InputBar
         collapse={isInputCollapsed}
         category={category}
-        handleSubmit={handleSubmit}
+        handleSubmit={createCategory}
         loading={loading}
         setCategory={setCategory}
         onCollapse={() => setIsInputCollapsed(true)}

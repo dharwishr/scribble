@@ -1,21 +1,18 @@
 import React, { useState, useEffect } from "react";
 
-import { Edit, Delete } from "@bigbinary/neeto-icons";
-import { Alert } from "@bigbinary/neetoui";
-import { PageLoader, Table, Button } from "@bigbinary/neetoui";
+import { PageLoader } from "@bigbinary/neetoui";
 import { Container } from "@bigbinary/neetoui/layouts";
-import { useHistory } from "react-router-dom";
 
 import articlesApi from "apis/articles";
 import categoriesApi from "apis/categories";
 
+import DashboradTable from "./DashboradTable";
 import Menu from "./Menu";
 import SubHead from "./SubHead";
 
 import NavBar from "../NavBar";
 
 const Dashboard = () => {
-  const history = useHistory();
   const [displayedArticles, setDisplayedArticles] = useState({
     status: "All",
     category: "All",
@@ -28,7 +25,6 @@ const Dashboard = () => {
     status: true,
     action: true,
   });
-  const [showMenu, setShowMenu] = useState(false);
   const [isInputCollapsed, setIsInputCollapsed] = useState(true);
   const [showAlertSmall, setShowAlertSmall] = useState(false);
   const [articles, setArticles] = useState([]);
@@ -56,80 +52,6 @@ const Dashboard = () => {
     }));
     return data;
   };
-  const articleColumns = [
-    {
-      title: "TITLE",
-      dataIndex: "title",
-      key: "title",
-      visibility: columnVisibility.title,
-    },
-    {
-      title: "DATE",
-      dataIndex: "date",
-      key: "date",
-      visibility: columnVisibility.date,
-    },
-    {
-      title: "AUTHOR",
-      dataIndex: "author",
-      key: "author",
-      visibility: columnVisibility.author,
-    },
-    {
-      title: "CATEGORY",
-      dataIndex: "category",
-      key: "category",
-      visibility: columnVisibility.category,
-    },
-    {
-      title: "STATUS",
-      dataIndex: "status",
-      key: "status",
-      visibility: columnVisibility.status,
-    },
-    {
-      title: "Action",
-      visibility: columnVisibility.action,
-      dataIndex: "action",
-      key: "action",
-      render: (_, record) => (
-        <>
-          <Button
-            icon={Edit}
-            onClick={() => {
-              history.push(`/article/${record.slug}/edit`);
-            }}
-            style="secondary"
-          />
-          <Button
-            icon={Delete}
-            onClick={() => {
-              setShowAlertSmall(true);
-            }}
-            style="secondary"
-          />
-          <Alert
-            size="sm"
-            isOpen={showAlertSmall}
-            title="You are gonna delete article!"
-            message="Are you sure you want to continue?."
-            onClose={() => setShowAlertSmall(false)}
-            onSubmit={() => {
-              destroyArticle(record.slug);
-            }}
-          />
-        </>
-      ),
-    },
-  ];
-  const destroyArticle = async slug => {
-    try {
-      await articlesApi.destroy(slug);
-      fetchCategories();
-    } catch (error) {
-      logger.error(error);
-    }
-  };
   const fetchArticles = async () => {
     try {
       const response = await articlesApi.list();
@@ -146,6 +68,25 @@ const Dashboard = () => {
     } catch (error) {
       logger.error(error);
       setLoading(false);
+    }
+  };
+  const fetchCategories = async () => {
+    try {
+      const response = await categoriesApi.list();
+      setCategories(response.data.categories);
+      setFoundCategories(response.data.categories);
+      setLoading(false);
+    } catch (error) {
+      logger.error(error);
+      setLoading(false);
+    }
+  };
+  const loadData = async () => {
+    try {
+      await fetchArticles();
+      await fetchCategories();
+    } catch (error) {
+      logger.error(error);
     }
   };
   const sortArticles = (
@@ -172,20 +113,15 @@ const Dashboard = () => {
       setFoundArticles(articles);
     }
   };
-
-  const fetchCategories = async () => {
+  const destroyArticle = async slug => {
     try {
-      const response = await categoriesApi.list();
-      setCategories(response.data.categories);
-      setFoundCategories(response.data.categories);
-      setLoading(false);
+      await articlesApi.destroy(slug);
+      fetchCategories();
     } catch (error) {
       logger.error(error);
-      setLoading(false);
     }
   };
-
-  const handleSubmit = async event => {
+  const createCategory = async event => {
     event.preventDefault();
     try {
       await categoriesApi.create({
@@ -198,16 +134,6 @@ const Dashboard = () => {
     setIsInputCollapsed(!isInputCollapsed);
     setCategory(null);
   };
-
-  const loadData = async () => {
-    try {
-      await fetchArticles();
-      await fetchCategories();
-    } catch (error) {
-      logger.error(error);
-    }
-  };
-
   const searchWhichCategory = e => {
     const keyword = e.target.value;
     if (keyword !== "") {
@@ -220,7 +146,6 @@ const Dashboard = () => {
     }
     setSearchCategory(keyword);
   };
-
   const searchWhichArticle = e => {
     const keyword = e.target.value;
     if (keyword !== "") {
@@ -233,11 +158,9 @@ const Dashboard = () => {
     }
     setSearchArticle(keyword);
   };
-
   useEffect(() => {
     loadData();
     setLoading(false);
-    setShowMenu(!showMenu);
   }, []);
 
   if (loading) {
@@ -253,7 +176,6 @@ const Dashboard = () => {
       <NavBar></NavBar>
       <div className="flex">
         <Menu
-          showMenu={showMenu}
           counts={counts}
           displayedArticles={displayedArticles}
           sortArticles={sortArticles}
@@ -263,7 +185,7 @@ const Dashboard = () => {
           setIsInputCollapsed={setIsInputCollapsed}
           category={category}
           setCategory={setCategory}
-          handleSubmit={handleSubmit}
+          createCategory={createCategory}
           loading={loading}
           foundCategories={foundCategories}
           setFoundCategories={setFoundCategories}
@@ -276,14 +198,13 @@ const Dashboard = () => {
             columnVisibility={columnVisibility}
             setColumnVisibility={setColumnVisibility}
           />
-          <Table
-            columnData={articleColumns.filter(item => item.visibility)}
-            currentPageNumber={1}
-            defaultPageSize={10}
-            handlePageChange={function noRefCheck() {}}
-            onRowClick={function noRefCheck() {}}
-            onRowSelect={function noRefCheck() {}}
-            rowData={foundArticles}
+          <DashboradTable
+            columnVisibility={columnVisibility}
+            destroyArticle={destroyArticle}
+            setShowAlertSmall={setShowAlertSmall}
+            fetchArticles={fetchArticles}
+            foundArticles={foundArticles}
+            showAlertSmall={showAlertSmall}
           />
         </Container>
         {logger.error(foundArticles)}
