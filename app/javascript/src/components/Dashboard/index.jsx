@@ -1,32 +1,36 @@
 import React, { useState, useEffect } from "react";
 
-import { Plus, Search } from "@bigbinary/neeto-icons";
-import {
-  PageLoader,
-  Table,
-  Typography,
-  Button,
-  Dropdown,
-  Input,
-} from "@bigbinary/neetoui";
-import { MenuBar, Container, SubHeader } from "@bigbinary/neetoui/layouts";
-import { useHistory } from "react-router-dom";
+import { PageLoader } from "@bigbinary/neetoui";
+import { Container } from "@bigbinary/neetoui/layouts";
 
 import articlesApi from "apis/articles";
 import categoriesApi from "apis/categories";
 
-import InputBar from "../Common/InputBar";
+import DashboradTable from "./DashboradTable";
+import Menu from "./Menu";
+import SubHead from "./SubHead";
+
 import NavBar from "../NavBar";
 
 const Dashboard = () => {
-  const history = useHistory();
-  const [showMenu, setShowMenu] = useState(false);
-  const [isSearchCollapsed, setIsSearchCollapsed] = useState(true);
+  const [displayedArticles, setDisplayedArticles] = useState({
+    status: "All",
+    category: "All",
+  });
+  const [columnVisibility, setColumnVisibility] = useState({
+    title: true,
+    date: true,
+    author: true,
+    category: true,
+    status: true,
+    action: true,
+  });
   const [isInputCollapsed, setIsInputCollapsed] = useState(true);
+  const [showAlertSmall, setShowAlertSmall] = useState(false);
   const [articles, setArticles] = useState([]);
   const [searchArticle, setSearchArticle] = useState();
   const [foundArticles, setFoundArticles] = useState([]);
-  const [category, setCategory] = useState();
+  const [category, setCategory] = useState([]);
   const [searchCategory, setSearchCategory] = useState();
   const [categories, setCategories] = useState([]);
   const [foundCategories, setFoundCategories] = useState();
@@ -36,11 +40,23 @@ const Dashboard = () => {
     published: "",
     total: "",
   });
+  const mapArticles = input => {
+    const data = input.map(article => ({
+      key: article.id,
+      title: article.title,
+      author: article.author,
+      status: article.status,
+      date: article.date,
+      slug: article.slug,
+      category: article.assigned_category.category,
+    }));
+    return data;
+  };
   const fetchArticles = async () => {
     try {
       const response = await articlesApi.list();
-      setArticles(response.data.articles);
-      setFoundArticles(response.data.articles);
+      setArticles(mapArticles(response.data.articles.all));
+      setFoundArticles(mapArticles(response.data.articles.all));
       setCounts({
         draft: response.data.articles["draft_count"],
         published: response.data.articles["published_count"],
@@ -54,7 +70,6 @@ const Dashboard = () => {
       setLoading(false);
     }
   };
-
   const fetchCategories = async () => {
     try {
       const response = await categoriesApi.list();
@@ -66,8 +81,47 @@ const Dashboard = () => {
       setLoading(false);
     }
   };
-
-  const handleSubmit = async event => {
+  const loadData = async () => {
+    try {
+      await fetchArticles();
+      await fetchCategories();
+    } catch (error) {
+      logger.error(error);
+    }
+  };
+  const sortArticles = (
+    status = displayedArticles.status,
+    category = displayedArticles.category
+  ) => {
+    if (status !== "All" && category !== "All") {
+      setDisplayedArticles({ status: status, category: category });
+      setFoundArticles(
+        articles
+          .filter(article => article.status === status)
+          .filter(article => article.category === category)
+      );
+    } else if (status === "All" && category !== "All") {
+      setDisplayedArticles({ status: status, category: category });
+      setFoundArticles(
+        articles.filter(article => article.category === category)
+      );
+    } else if (status !== "All" && category === "All") {
+      setDisplayedArticles({ status: status, category: category });
+      setFoundArticles(articles.filter(article => article.status === status));
+    } else {
+      setDisplayedArticles({ status: status, category: category });
+      setFoundArticles(articles);
+    }
+  };
+  const destroyArticle = async slug => {
+    try {
+      await articlesApi.destroy(slug);
+      fetchCategories();
+    } catch (error) {
+      logger.error(error);
+    }
+  };
+  const createCategory = async event => {
     event.preventDefault();
     try {
       await categoriesApi.create({
@@ -76,21 +130,10 @@ const Dashboard = () => {
     } catch (error) {
       logger.error(error);
     }
-    setIsInputCollapsed(true);
-    loadData();
+    fetchCategories();
+    setIsInputCollapsed(!isInputCollapsed);
+    setCategory(null);
   };
-
-  const loadData = async () => {
-    try {
-      await fetchArticles();
-      await fetchCategories();
-    } catch (error) {
-      logger.error(error);
-    } finally {
-      setFoundArticles(articles);
-    }
-  };
-
   const searchWhichCategory = e => {
     const keyword = e.target.value;
     if (keyword !== "") {
@@ -103,11 +146,10 @@ const Dashboard = () => {
     }
     setSearchCategory(keyword);
   };
-
   const searchWhichArticle = e => {
     const keyword = e.target.value;
     if (keyword !== "") {
-      const results = articles.filter(article =>
+      const results = foundArticles.filter(article =>
         article.title.toLowerCase().startsWith(keyword.toLowerCase())
       );
       setFoundArticles(results);
@@ -116,11 +158,9 @@ const Dashboard = () => {
     }
     setSearchArticle(keyword);
   };
-
   useEffect(() => {
     loadData();
     setLoading(false);
-    setShowMenu(!showMenu);
   }, []);
 
   if (loading) {
@@ -135,124 +175,36 @@ const Dashboard = () => {
     <div>
       <NavBar></NavBar>
       <div className="flex">
-        <MenuBar showMenu={showMenu} title="Articles">
-          <MenuBar.Block label="All" count={counts.total} active />
-          <MenuBar.Block label="Draft" count={counts.draft} />
-          <MenuBar.Block label="Published" count={counts.published} />
+        <Menu
+          counts={counts}
+          displayedArticles={displayedArticles}
+          sortArticles={sortArticles}
+          searchWhichCategory={searchWhichCategory}
+          searchCategory={searchCategory}
+          isInputCollapsed={isInputCollapsed}
+          setIsInputCollapsed={setIsInputCollapsed}
+          category={category}
+          setCategory={setCategory}
+          createCategory={createCategory}
+          loading={loading}
+          foundCategories={foundCategories}
+          setFoundCategories={setFoundCategories}
+        />
 
-          <MenuBar.SubTitle
-            iconProps={[
-              {
-                icon: Search,
-                onClick: () => setIsSearchCollapsed(!isSearchCollapsed),
-              },
-              {
-                icon: Plus,
-                onClick: () => setIsInputCollapsed(!isInputCollapsed),
-              },
-            ]}
-          >
-            <Typography
-              component="h4"
-              style="h5"
-              textTransform="uppercase"
-              weight="bold"
-            >
-              CATEGORIES
-            </Typography>
-          </MenuBar.SubTitle>
-          <MenuBar.Search
-            type="search"
-            onChange={searchWhichCategory}
-            value={searchCategory}
-            collapse={isSearchCollapsed}
-            onCollapse={() => setIsSearchCollapsed(true)}
-            placeholder="Search"
-          />
-          <InputBar
-            collapse={isInputCollapsed}
-            category={category}
-            handleSubmit={handleSubmit}
-            loading={loading}
-            setCategory={setCategory}
-            onCollapse={() => setIsInputCollapsed(true)}
-          />
-          {foundCategories && foundCategories.length > 0 ? (
-            foundCategories
-              .sort((a, b) => (a.position > b.position ? 1 : -1))
-              .map(each => (
-                <MenuBar.Block
-                  key={each.position}
-                  label={each.category}
-                  count={each.count}
-                />
-              ))
-          ) : (
-            <MenuBar.Block label="No Category Found" />
-          )}
-        </MenuBar>
         <Container>
-          <SubHeader
-            rightActionBlock={
-              <>
-                <Input
-                  placeholder="Search"
-                  onChange={searchWhichArticle}
-                  value={searchArticle}
-                  prefix={<Search />}
-                />
-                <Dropdown
-                  buttonStyle="secondary"
-                  label="Columns"
-                  position="bottom-end"
-                >
-                  <li>Option 1</li>
-                  <li>Option 2</li>
-                  <li>Option 3</li>
-                  <li>Option 4</li>
-                  <li>Option 5</li>
-                </Dropdown>
-                <Button
-                  onClick={() => history.push("/article/create")}
-                  label="Add New Article"
-                  icon={Plus}
-                  tooltipProps={{
-                    content: "Top",
-                    position: "top",
-                  }}
-                />
-              </>
-            }
-            className={"pt-6"}
+          <SubHead
+            searchWhichArticle={searchWhichArticle}
+            searchArticle={searchArticle}
+            columnVisibility={columnVisibility}
+            setColumnVisibility={setColumnVisibility}
           />
-          <Table
-            columnData={[
-              {
-                dataIndex: "title",
-                key: "title",
-                title: "TITLE",
-                width: 75,
-              },
-
-              {
-                dataIndex: "date",
-                key: "date",
-                title: "DATE",
-                width: 75,
-              },
-              {
-                dataIndex: "author",
-                key: "author",
-                title: "AUTHOR",
-                width: 75,
-              },
-            ]}
-            currentPageNumber={1}
-            defaultPageSize={10}
-            handlePageChange={function noRefCheck() {}}
-            onRowClick={function noRefCheck() {}}
-            onRowSelect={function noRefCheck() {}}
-            rowData={[]}
+          <DashboradTable
+            columnVisibility={columnVisibility}
+            destroyArticle={destroyArticle}
+            setShowAlertSmall={setShowAlertSmall}
+            fetchArticles={fetchArticles}
+            foundArticles={foundArticles}
+            showAlertSmall={showAlertSmall}
           />
         </Container>
         {logger.error(foundArticles)}

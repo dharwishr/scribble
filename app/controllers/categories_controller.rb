@@ -3,12 +3,12 @@
 class CategoriesController < ApplicationController
   before_action :load_category!, only: %i[update destroy]
   def index
-    @categories = Categories.all
+    @categories = Category.all
   end
 
   def create
-    category = Categories.new(category_params)
-    last_position_number = Categories.maximum(:position)
+    category = Category.new(category_params)
+    last_position_number = Category.maximum(:position)
     if last_position_number
       category.position = last_position_number.to_i + 1
     else
@@ -19,7 +19,7 @@ class CategoriesController < ApplicationController
   end
 
   def update
-    category = Categories.find_by!(id: params[:id])
+    category = Category.find_by!(id: params[:id])
     category.update!(category_params)
     respond_with_success("successfully_updated")
   end
@@ -36,6 +36,6 @@ class CategoriesController < ApplicationController
     end
 
     def load_category!
-      @category = Categories.find_by!(id: params[:id])
+      @category = Category.find_by!(id: params[:id])
     end
 end

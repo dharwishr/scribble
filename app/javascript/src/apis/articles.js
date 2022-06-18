@@ -10,10 +10,7 @@ const update = ({ slug, payload, quiet = false }) => {
   const path = quiet ? `/articles/${slug}?quiet` : `/articles/${slug}`;
   return axios.put(path, payload);
 };
-const destroy = ({ slug, quiet }) => {
-  const path = quiet ? `/articles/${slug}?quiet` : `/articles/${slug}`;
-  return axios.destroy(path);
-};
+const destroy = id => axios.delete(`/articles/${id}`);
 
 const articlesApi = { list, show, create, update, destroy };
 

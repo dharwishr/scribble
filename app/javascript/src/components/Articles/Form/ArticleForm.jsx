@@ -3,28 +3,29 @@ import { useEffect } from "react";
 
 import { Textarea } from "@bigbinary/neetoui";
 import { Input } from "@bigbinary/neetoui";
-import { Button } from "@bigbinary/neetoui";
+import { ActionDropdown } from "@bigbinary/neetoui";
 import Select from "react-select";
 
 const ArticleForm = ({
-  type = "create",
   title,
   body,
   setTitle,
   setBody,
   setAuthor,
   categories,
+  articleStatus,
+  setArticleStatus,
+  categoryId,
   setCategoryId,
-  loading,
   handleSubmit,
 }) => {
   // const categoryOptions = categories.map(category => ({
   //   value: category.id,
   //   label: category.category,
   // }));
+
   useEffect(() => {
     setAuthor("Oliver Smith");
-    setCategoryId("2");
   }, []);
 
   return (
@@ -41,24 +42,29 @@ const ArticleForm = ({
         value={body}
         onChange={e => setBody(e.target.value)}
       />
-      <div className="flex">
-        {/* <Dropdown position="bottom" label="Dropdown" isMultiLevel >
-          {categories.map((item, idx) => (
-            <li key={idx}>{item}</li>
-          ))}
-        </Dropdown> */}
-        <Select
-          options={categories}
-          // defaultValue={defaultOption}
-          // onChange={e => setCategoryId(e.value)}
-          isSearchable
-        />
-      </div>
+      <div className="flex"></div>
 
-      <Button
-        type="submit"
-        buttonText={type === "create" ? "Create Task" : "Update Task"}
-        loading={loading}
+      <ActionDropdown
+        label={articleStatus === "draft" ? "Save Draft" : "Publish Article"}
+        onClick={() => handleSubmit()}
+        style="primary"
+      >
+        <li onClick={() => setArticleStatus("draft")}>Draft</li>
+        <li onClick={() => setArticleStatus("published")}>Publish</li>
+      </ActionDropdown>
+
+      <Select
+        isSearchable
+        label="Select"
+        name="ValueList"
+        value={categoryId}
+        defaultValue={categoryId}
+        onChange={newValue => setCategoryId(newValue)}
+        options={categories.map(each => ({
+          value: each.id,
+          label: each.category,
+        }))}
+        placeholder="Select a Category"
       />
     </form>
   );

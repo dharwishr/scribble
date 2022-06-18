@@ -4,6 +4,7 @@ class ArticlesController < ApplicationController
   before_action :load_article!, only: %i[show update destroy]
   def index
     articles = Article.all
+    @all_articles = articles
     @draft_articles = articles.of_status(:draft)
     @published_articles = articles.of_status(:published)
   end
@@ -21,7 +22,7 @@ class ArticlesController < ApplicationController
   end
 
   def show
-    respond_with_json({ article: @article, assigned_category: @article.assigned_category_id })
+    render
   end
 
   def destroy
