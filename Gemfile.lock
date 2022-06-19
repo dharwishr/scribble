@@ -67,6 +67,7 @@ GEM
     babel-transpiler (0.7.0)
       babel-source (>= 4.0, < 6)
       execjs (~> 2.0)
+    bcrypt (3.1.17)
     bindex (0.8.1)
     bootsnap (1.11.1)
       msgpack (~> 1.2)
@@ -106,6 +107,8 @@ GEM
       ast (~> 2.4.1)
     puma (5.6.4)
       nio4r (~> 2.0)
+    pundit (2.2.0)
+      activesupport (>= 3.0.0)
     racc (1.6.0)
     rack (2.2.3)
     rack-proxy (0.7.2)
@@ -213,11 +216,13 @@ PLATFORMS
 
 DEPENDENCIES
   acts_as_list
+  bcrypt (~> 3.1.13)
   bootsnap (>= 1.4.4)
   byebug
   jbuilder (~> 2.7)
   listen (~> 3.3)
   puma (~> 5.0)
+  pundit
   rails (~> 6.1.4, >= 6.1.4.1)
   react-rails
   rubocop
