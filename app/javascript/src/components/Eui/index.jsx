@@ -5,22 +5,35 @@ import { PageLoader } from "@bigbinary/neetoui";
 // import { Typography } from "@bigbinary/neetoui";
 // import { useHistory } from "react-router-dom";
 import { Accordion } from "@bigbinary/neetoui";
-import { Header, MenuBar } from "@bigbinary/neetoui/layouts";
+import { Typography } from "@bigbinary/neetoui";
+import { MenuBar } from "@bigbinary/neetoui/layouts";
 import { Container } from "@bigbinary/neetoui/layouts";
 
 // import { Button } from "@bigbinary/neetoui";
 import euiApi from "../../apis/eui";
+import settingsApi from "../../apis/settings";
 // import ShowArticle from "./ShowArticle";
 // const [showMenu, setShowMenu] = useState(false);
 const Eui = () => {
   // const history = useHistory();
   const [data, setData] = useState();
   const [loading, setLoading] = useState(true);
+  const [siteName, setSiteName] = useState();
   // const [slug, setSlug] = useState()
   const fetchData = async () => {
     try {
       const response = await euiApi.list();
       setData(response.data.categories);
+      setLoading(false);
+    } catch (error) {
+      logger.error(error);
+      setLoading(false);
+    }
+  };
+  const fetchSiteData = async () => {
+    try {
+      const response = await settingsApi.list();
+      setSiteName(response.data.site_name);
       setLoading(false);
     } catch (error) {
       logger.error(error);
@@ -35,6 +48,7 @@ const Eui = () => {
   useEffect(() => {
     // loadData();
     setLoading(false);
+    fetchSiteData();
     fetchData();
     // setShowMenu(!showMenu);
   }, []);
@@ -48,11 +62,12 @@ const Eui = () => {
   }
 
   return (
-    <Container isHeaderFixed>
-      <Header
-        className="border ext-center sticky top-0 z-50"
-        title={<span className="text-center">Spinkart</span>}
-      ></Header>
+    <Container>
+      <nav className="border max-w-7xl sticky top-0 mx-auto flex h-20 bg-white px-4">
+        <Typography style="h3" className="m-auto">
+          {siteName}
+        </Typography>
+      </nav>
       <MenuBar showMenu="true">
         <Accordion padded style="secondary" className="w-full p-0">
           {data && data.length > 0 ? (

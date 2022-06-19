@@ -1,13 +1,14 @@
 # frozen_string_literal: true
 
 class SettingsController < ApplicationController
-  before_action :load_setting!, only: %i[update destroy]
+  skip_before_action :authenticate_user_using_x_auth_token
+  before_action :load_setting!
   def index
-    @settings = Settings.all
+    respond_with_json({ site_name: @setting.name, is_password_enabled: @setting.password_enabled })
   end
 
   def update
-    setting = Settings.find_by!(id: params[:id])
+    setting = Settings.first
     setting.update!(setting_params)
     respond_with_success("successfully_updated")
   end
@@ -15,10 +16,10 @@ class SettingsController < ApplicationController
   private
 
     def setting_params
-      params.require(:setting).permit(:id, :name, :password)
+      params.require(:setting).permit(:name, :password, :password_enabled)
     end
 
     def load_setting!
-      @setting = Settings.find_by!(id: params[:id])
+      @setting = Settings.first
     end
 end

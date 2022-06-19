@@ -9,18 +9,15 @@ import { PageLoader } from "@bigbinary/neetoui";
 import settingsApi from "../../apis/settings";
 
 const General = () => {
-  const [fetchedSettings, setFetchedSettings] = useState([]);
-  const [isPasswordThere, setIsPasswordThere] = useState(false);
+  const [isPasswordEnabled, setIsPasswordEnabled] = useState(false);
   const [loading, setLoading] = useState(true);
   const [name, setName] = useState();
   const [password, setPassword] = useState();
-  const id = 1;
   const fetchSettings = async () => {
     try {
       const response = await settingsApi.list();
-      setFetchedSettings(response.data.settings);
-      setName(response.data.settings[0].name);
-      if (response.data.settings[0].password) setIsPasswordThere(true);
+      setName(response.data.site_name);
+      setIsPasswordEnabled(response.data.is_password_enabled);
       setLoading(false);
     } catch (error) {
       logger.error(error);
@@ -32,10 +29,10 @@ const General = () => {
     setLoading(true);
     try {
       await settingsApi.update({
-        id,
         payload: {
           name,
-          password_digest: password,
+          password,
+          password_enabled: isPasswordEnabled,
         },
       });
       setLoading(false);
@@ -73,15 +70,15 @@ const General = () => {
         />
         <div className="border-b mb-5"></div>
         <Checkbox
-          checked={isPasswordThere}
+          checked={isPasswordEnabled}
           id="checkbox_name"
           label="Password Protect Knowledge Base"
           onChange={
-            () => setIsPasswordThere(!isPasswordThere)
+            () => setIsPasswordEnabled(!isPasswordEnabled)
             // function noRefCheck() {}
           }
         />
-        {isPasswordThere ? (
+        {isPasswordEnabled ? (
           <Input
             value={password}
             label="Password"
@@ -93,10 +90,9 @@ const General = () => {
         <Button label="Save Changes" type="submit" style="primary" />
         <Button
           label="Cancel"
-          onClick={() => setIsPasswordThere(!isPasswordThere)}
+          onClick={() => setIsPasswordEnabled(!isPasswordEnabled)}
           style="text"
         />
-        {logger.error(fetchedSettings)}
       </form>
     </div>
   );

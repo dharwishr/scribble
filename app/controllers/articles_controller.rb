@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class ArticlesController < ApplicationController
+  skip_before_action :authenticate_user_using_x_auth_token
   before_action :load_article!, only: %i[show update destroy]
   def index
     articles = Article.all
