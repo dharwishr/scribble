@@ -13,13 +13,13 @@ class ArticlesController < ApplicationController
   def create
     article = Article.new(article_params)
     article.save!
-    respond_with_success("successfully_created")
+    respond_with_success("Article has been successfully created!")
   end
 
   def update
     article = Article.find_by!(slug: params[:slug])
     article.update!(article_params)
-    respond_with_success("successfully_updated") unless params.key?(:quiet)
+    respond_with_success("Article has been successfully updated!") unless params.key?(:quiet)
   end
 
   def show

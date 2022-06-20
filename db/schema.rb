@@ -12,7 +12,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_06_19_180231) do
+ActiveRecord::Schema.define(version: 2022_06_20_032803) do
 
   create_table "articles", force: :cascade do |t|
     t.string "title"
@@ -33,7 +33,7 @@ ActiveRecord::Schema.define(version: 2022_06_19_180231) do
   end
 
   create_table "redirections", force: :cascade do |t|
-    t.string "from"
+    t.string "from", null: false
     t.string "to"
     t.index ["from"], name: "index_redirections_on_from", unique: true
   end

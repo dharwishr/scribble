@@ -16,13 +16,13 @@ class CategoriesController < ApplicationController
       category.position = 1
     end
     category.save!
-    respond_with_success("successfully_created")
+    respond_with_success("Category has been successfully created!")
   end
 
   def update
     category = Category.find_by!(id: params[:id])
     category.update!(category_params)
-    respond_with_success("successfully_updated")
+    respond_with_success("Category has been successfully updated!")
   end
 
   def destroy

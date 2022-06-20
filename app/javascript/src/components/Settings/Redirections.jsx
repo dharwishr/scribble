@@ -20,6 +20,7 @@ const Redirections = () => {
   });
   const [loading, setLoading] = useState(true);
   const [editRow, setEditRow] = useState(null);
+  const [addNew, setAddNew] = useState(false);
   const [form] = Form.useForm();
   const fetchRedirections = async () => {
     try {
@@ -31,7 +32,19 @@ const Redirections = () => {
       setLoading(false);
     }
   };
-
+  const createRedirection = async () => {
+    try {
+      await redirectionsApi.create({
+        from: editData.from,
+        to: editData.to,
+      });
+    } catch (error) {
+      logger.error(error);
+    } finally {
+      fetchRedirections();
+      setAddNew(false);
+    }
+  };
   const editRedirection = async () => {
     try {
       await redirectionsApi.update({
@@ -182,15 +195,6 @@ const Redirections = () => {
     },
   ];
 
-  const handleAdd = () => {
-    const newData = {
-      key: 10,
-      from: "",
-      to: "",
-    };
-    setRedirections([...redirections, newData]);
-  };
-
   useEffect(() => {
     fetchRedirections();
   }, []);
@@ -223,16 +227,59 @@ const Redirections = () => {
             rowData={dataSource}
           />
         </Form>
+        {addNew ? (
+          <div className="mt-4 flex">
+            <div className="flex grid grid-cols-3 space-x-20">
+              <Input
+                value={editData.from}
+                required
+                label="From"
+                onChange={e => {
+                  setEditData({ ...editData, from: e.target.value });
+                }}
+              />
+              <Input
+                value={editData.to}
+                required
+                label="To"
+                onChange={e => {
+                  setEditData({ ...editData, to: e.target.value });
+                }}
+              />
+              <div className="flex pl-2">
+                <Button
+                  icon={Check}
+                  onClick={() => {
+                    createRedirection();
+                  }}
+                  style="secondary"
+                />
+                <Button
+                  icon={Close}
+                  onClick={() => {
+                    setAddNew(!addNew);
+                  }}
+                  style="secondary"
+                />
+              </div>
+            </div>
+          </div>
+        ) : (
+          <div></div>
+        )}
       </div>
-      <Button
-        label="Add Article"
-        icon={Plus}
-        onClick={() => {
-          setEditRow(1);
-          handleAdd();
-        }}
-        style="text"
-      />
+      {addNew ? (
+        <div></div>
+      ) : (
+        <Button
+          label="Add Article"
+          icon={Plus}
+          onClick={() => {
+            setAddNew(!addNew);
+          }}
+          style="text"
+        />
+      )}
     </div>
   );
 };

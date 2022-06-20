@@ -68,7 +68,7 @@ const General = () => {
           onChange={e => setName(e.target.value)}
           helpText="Customize the site name which is used to show the site name in Open Graph Tags."
         />
-        <div className="border-b mb-5"></div>
+        <div className="border-b mt-5 mb-5"></div>
         <Checkbox
           checked={isPasswordEnabled}
           id="checkbox_name"
@@ -83,16 +83,18 @@ const General = () => {
             value={password}
             label="Password"
             type="password"
+            className="mt-3"
             onChange={e => setPassword(e.target.value)}
           />
         ) : null}
-
-        <Button label="Save Changes" type="submit" style="primary" />
-        <Button
-          label="Cancel"
-          onClick={() => setIsPasswordEnabled(!isPasswordEnabled)}
-          style="text"
-        />
+        <div className="mt-3">
+          <Button label="Save Changes" type="submit" style="primary" />
+          <Button
+            label="Cancel"
+            onClick={() => setIsPasswordEnabled(!isPasswordEnabled)}
+            style="text"
+          />
+        </div>
       </form>
     </div>
   );

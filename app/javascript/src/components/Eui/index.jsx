@@ -8,14 +8,12 @@ import { Label } from "@bigbinary/neetoui";
 import { Tag } from "@bigbinary/neetoui";
 import { MenuBar } from "@bigbinary/neetoui/layouts";
 import { Container } from "@bigbinary/neetoui/layouts";
-import { useHistory } from "react-router-dom";
 import { useParams } from "react-router-dom";
 
 import euiApi from "../../apis/eui";
 import settingsApi from "../../apis/settings";
 
 const Eui = () => {
-  const history = useHistory();
   const [article, setArticle] = useState([]);
   const [data, setData] = useState();
   const [loading, setLoading] = useState(true);
