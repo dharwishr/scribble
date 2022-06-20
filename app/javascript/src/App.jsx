@@ -44,6 +44,7 @@ const App = () => {
         <Route exact path="/article/:slug/edit" component={EditArticle} />
         <Route exact path="/settings" component={Settings} />
         <Route exact path="/login" component={GuestLogin} />
+        <Route exact path="/public/:slug" component={Eui} />
         <PrivateRoute
           path="/public/"
           redirectRoute="/login"
