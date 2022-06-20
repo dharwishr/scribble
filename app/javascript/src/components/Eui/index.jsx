@@ -9,6 +9,7 @@ import { Tag } from "@bigbinary/neetoui";
 import { MenuBar } from "@bigbinary/neetoui/layouts";
 import { Container } from "@bigbinary/neetoui/layouts";
 import { useParams } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 
 import euiApi from "../../apis/eui";
 import settingsApi from "../../apis/settings";
@@ -19,6 +20,7 @@ const Eui = () => {
   const [loading, setLoading] = useState(true);
   const [siteName, setSiteName] = useState();
   const { slug } = useParams();
+  const history = useHistory();
   const fetchData = async () => {
     try {
       const response = await euiApi.list();
@@ -93,6 +95,7 @@ const Eui = () => {
                         <Typography
                           style="body2"
                           key={article.id}
+                          active={slug === article.slug}
                           className="cursor-pointer"
                           onClick={() => {
                             history.push(`/public/${article.slug}`);
@@ -109,22 +112,25 @@ const Eui = () => {
             </Accordion>
           </div>
         </MenuBar>
+        {slug ? (
+          <Container>
+            <div className="mt-5">
+              <Typography style="h2" className="mb-4">
+                {article.title}
+              </Typography>
+              <div className="mt-2 flex flex-row space-x-5">
+                <Tag label={article.category} color="blue" />
 
-        <Container>
-          <div className="mt-5">
-            <Typography style="h2" className="mb-4">
-              {article.title}
-            </Typography>
-            <div className="mt-2 flex flex-row space-x-5">
-              <Tag label={article.category} color="blue" />
-
-              <Label>{article.date}</Label>
+                <Label>{article.date}</Label>
+              </div>
+              <Typography style="body2" className="mt-4">
+                {article.body}
+              </Typography>
             </div>
-            <Typography style="body2" className="mt-4">
-              {article.body}
-            </Typography>
-          </div>
-        </Container>
+          </Container>
+        ) : (
+          <div></div>
+        )}
       </div>
     </>
   );
