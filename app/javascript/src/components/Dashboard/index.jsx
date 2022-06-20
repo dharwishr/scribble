@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 
 import { PageLoader } from "@bigbinary/neetoui";
+import { Toastr } from "@bigbinary/neetoui";
 import { Container } from "@bigbinary/neetoui/layouts";
 
 import articlesApi from "apis/articles";
@@ -35,6 +36,7 @@ const Dashboard = () => {
   const [categories, setCategories] = useState([]);
   const [foundCategories, setFoundCategories] = useState();
   const [loading, setLoading] = useState(true);
+
   const [counts, setCounts] = useState({
     draft: "",
     published: "",
@@ -66,7 +68,7 @@ const Dashboard = () => {
       });
       setLoading(false);
     } catch (error) {
-      logger.error(error);
+      Toastr.error(error);
       setLoading(false);
     }
   };
@@ -77,7 +79,7 @@ const Dashboard = () => {
       setFoundCategories(response.data.categories);
       setLoading(false);
     } catch (error) {
-      logger.error(error);
+      Toastr.error(error);
       setLoading(false);
     }
   };
@@ -86,7 +88,7 @@ const Dashboard = () => {
       await fetchArticles();
       await fetchCategories();
     } catch (error) {
-      logger.error(error);
+      Toastr.error(error);
     }
   };
   const sortArticles = (
@@ -118,7 +120,9 @@ const Dashboard = () => {
       await articlesApi.destroy(slug);
       fetchCategories();
     } catch (error) {
-      logger.error(error);
+      Toastr.error(error);
+    } finally {
+      Toastr.success("Article has been successfully deleted.");
     }
   };
   const createCategory = async event => {
@@ -128,7 +132,7 @@ const Dashboard = () => {
         category: { category },
       });
     } catch (error) {
-      logger.error(error);
+      Toastr.error(error);
     }
     fetchCategories();
     setIsInputCollapsed(!isInputCollapsed);

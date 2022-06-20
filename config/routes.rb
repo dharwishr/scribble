@@ -6,7 +6,7 @@ Rails.application.routes.draw do
     resources :categories, except: %i[new edit], param: :id
     resources :eui, except: %i[new edit], param: :id
     resource :session, only: [:create, :destroy]
-    resources :redirections, except: %i[new edit], param: :id
+    resources :redirections, except: %i[new show edit]
     resources :settings, except: %i[new edit], param: :id
   end
 

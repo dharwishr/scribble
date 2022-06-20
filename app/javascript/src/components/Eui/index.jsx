@@ -2,24 +2,25 @@ import React from "react";
 import { useState, useEffect } from "react";
 
 import { PageLoader } from "@bigbinary/neetoui";
-// import { Typography } from "@bigbinary/neetoui";
-// import { useHistory } from "react-router-dom";
-import { Accordion } from "@bigbinary/neetoui";
 import { Typography } from "@bigbinary/neetoui";
+import { Accordion } from "@bigbinary/neetoui";
+import { Label } from "@bigbinary/neetoui";
+import { Tag } from "@bigbinary/neetoui";
 import { MenuBar } from "@bigbinary/neetoui/layouts";
 import { Container } from "@bigbinary/neetoui/layouts";
+import { useParams } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 
-// import { Button } from "@bigbinary/neetoui";
 import euiApi from "../../apis/eui";
 import settingsApi from "../../apis/settings";
-// import ShowArticle from "./ShowArticle";
-// const [showMenu, setShowMenu] = useState(false);
+
 const Eui = () => {
-  // const history = useHistory();
+  const [article, setArticle] = useState([]);
   const [data, setData] = useState();
   const [loading, setLoading] = useState(true);
   const [siteName, setSiteName] = useState();
-  // const [slug, setSlug] = useState()
+  const { slug } = useParams();
+  const history = useHistory();
   const fetchData = async () => {
     try {
       const response = await euiApi.list();
@@ -40,18 +41,27 @@ const Eui = () => {
       setLoading(false);
     }
   };
-  // const previewArticle = (urlSlug) => {
-  //   setSlug(urlSlug)
-  //   history.push(`/public/${slug}`)
-  // }
-
+  const fetchArticleDetails = async () => {
+    try {
+      const response = await euiApi.show(slug);
+      setArticle(response.data);
+    } catch (error) {
+      logger.error(error);
+    } finally {
+      setLoading(false);
+    }
+  };
   useEffect(() => {
     // loadData();
     setLoading(false);
     fetchSiteData();
     fetchData();
+    if (slug) {
+      fetchArticleDetails();
+    }
+
     // setShowMenu(!showMenu);
-  }, []);
+  }, [slug]);
 
   if (loading) {
     return (
@@ -62,32 +72,67 @@ const Eui = () => {
   }
 
   return (
-    <Container>
+    <>
       <nav className="border max-w-7xl sticky top-0 mx-auto flex h-20 bg-white px-4">
         <Typography style="h3" className="m-auto">
           {siteName}
         </Typography>
       </nav>
-      <MenuBar showMenu="true">
-        <Accordion padded style="secondary" className="w-full p-0">
-          {data && data.length > 0 ? (
-            data
-              .sort((a, b) => (a.position > b.position ? 1 : -1))
-              .map(each => (
-                <Accordion.Item title={each.category} key={each.position}>
-                  {each.articles.map(article => (
-                    <a key={article.id} className="w-full" href="">
-                      {article.title}
-                    </a>
-                  ))}
-                </Accordion.Item>
-              ))
-          ) : (
-            <Accordion.Item title="No Data found"></Accordion.Item>
-          )}
-        </Accordion>
-      </MenuBar>
-    </Container>
+      <div className="flex flex-row">
+        <MenuBar showMenu="true">
+          <div>
+            <Accordion>
+              {data && data.length > 0 ? (
+                data
+                  .sort((a, b) => (a.position > b.position ? 1 : -1))
+                  .map(each => (
+                    <Accordion.Item
+                      title={each.category}
+                      key={each.position}
+                      className="border-b-2"
+                    >
+                      {each.articles.map(article => (
+                        <Typography
+                          style="body2"
+                          key={article.id}
+                          active={slug === article.slug}
+                          className="cursor-pointer"
+                          onClick={() => {
+                            history.push(`/public/${article.slug}`);
+                          }}
+                        >
+                          {article.title}
+                        </Typography>
+                      ))}
+                    </Accordion.Item>
+                  ))
+              ) : (
+                <Accordion.Item title="No Data found"></Accordion.Item>
+              )}
+            </Accordion>
+          </div>
+        </MenuBar>
+        {slug ? (
+          <Container>
+            <div className="mt-5">
+              <Typography style="h2" className="mb-4">
+                {article.title}
+              </Typography>
+              <div className="mt-2 flex flex-row space-x-5">
+                <Tag label={article.category} color="blue" />
+
+                <Label>{article.date}</Label>
+              </div>
+              <Typography style="body2" className="mt-4">
+                {article.body}
+              </Typography>
+            </div>
+          </Container>
+        ) : (
+          <div></div>
+        )}
+      </div>
+    </>
   );
 };
 export default Eui;

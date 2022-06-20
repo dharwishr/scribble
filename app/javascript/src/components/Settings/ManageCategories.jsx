@@ -229,14 +229,18 @@ const ManageCategories = () => {
   const addNewArticle = () => {
     if (isAddNew) {
       return (
-        <div className="p-5">
+        <div className="flex max-w-xs p-5">
           <Input
-            placeholder="Input Placeholder"
+            label="Category"
+            required
+            placeholder="Enter Category Name"
             onChange={e => setNewCategory(e.target.value)}
             value={newCategory}
           />
-          <Button icon={Check} onClick={() => createCategory()} />
-          <Button icon={Close} onClick={() => setIsAddNew(!isAddNew)} />
+          <div className="mt-4 ml-4 flex space-x-2">
+            <Button icon={Check} onClick={() => createCategory()} />
+            <Button icon={Close} onClick={() => setIsAddNew(!isAddNew)} />
+          </div>
         </div>
       );
     }

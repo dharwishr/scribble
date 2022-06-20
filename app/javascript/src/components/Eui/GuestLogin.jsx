@@ -20,6 +20,7 @@ const GuestLogin = () => {
     try {
       const response = await settingsApi.list();
       setSiteName(response.data.site_name);
+      setLoading(false);
     } catch (error) {
       logger.error(error);
       setLoading(false);

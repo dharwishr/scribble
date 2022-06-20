@@ -1,8 +1,6 @@
-json.id article.id
-json.title article.title
-json.slug article.slug
-json.date article.created_at
-json.assigned_category do
-  json.extract! article.category,
-    :category
-end
+json.id @article.id
+json.title @article.title
+json.slug @article.slug
+json.body @article.body
+json.date @article.created_at.strftime("%B %d, %Y")
+json.category @article.category.category
