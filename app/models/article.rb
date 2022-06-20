@@ -3,6 +3,7 @@
 class Article < ApplicationRecord
   enum status: { draft: 0, published: 1 }
   belongs_to :category, foreign_key: "assigned_category_id", class_name: "Category"
+  belongs_to :user, foreign_key: "article_owner_id", class_name: "User"
   validates :title, presence: true, length: { maximum: 50 }
   validates :slug, uniqueness: true
   validate :slug_not_changed

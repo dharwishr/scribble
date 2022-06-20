@@ -13,7 +13,6 @@ const CreateArticle = () => {
   const history = useHistory();
   const [title, setTitle] = useState("");
   const [body, setBody] = useState("");
-  const [author, setAuthor] = useState("");
   const [categories, setCategories] = useState([]);
   const [categoryId, setCategoryId] = useState("");
   const [loading, setLoading] = useState(false);
@@ -27,7 +26,7 @@ const CreateArticle = () => {
         article: {
           title,
           body,
-          author,
+          article_owner_id: 1,
           assigned_category_id: categoryId.value,
           status: articleStatus,
         },
@@ -67,7 +66,6 @@ const CreateArticle = () => {
         body={body}
         setTitle={setTitle}
         setBody={setBody}
-        setAuthor={setAuthor}
         categories={categories}
         categoryId={categoryId}
         setCategoryId={setCategoryId}

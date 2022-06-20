@@ -34,7 +34,7 @@ class ArticlesController < ApplicationController
   private
 
     def article_params
-      params.require(:article).permit(:title, :body, :author, :assigned_category_id, :status)
+      params.require(:article).permit(:title, :body, :assigned_category_id, :status, :article_owner_id)
     end
 
     def load_article!
