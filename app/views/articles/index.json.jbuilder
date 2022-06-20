@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 json.articles do
   json.draft @draft_articles do | draft_article |
     json.partial! "articles/article", article: draft_article

@@ -5,7 +5,6 @@ FactoryBot.define do
     association :assigned_category_id, factory: :category
     title { Faker::Lorem.sentence[0..49] }
     body { Faker::Lorem.sentence[0..200] }
-    author { Faker::Name.name }
     status { "published" }
   end
 end
