@@ -20,7 +20,7 @@ def create_sample_data!
   puts "Done! Added Oliver Smith as User"
   create_category! category: "Example Category"
   puts "Done! Added Example Category"
-  create_settings! name: "Example Site Name"
+  create_settings! name: "Example Site Name", password: "welcome123"
   puts "Done! Added Example Site Name"
 end
 
@@ -29,12 +29,12 @@ def create_user!(options = {})
   User.create! attributes
 end
 
-def create_category!
+def create_category!(options = {})
   attributes = options
   Category.create! attributes
 end
 
-def create_settings!
+def create_settings!(options = {})
   attributes = options
   Settings.create! attributes
 end
