@@ -35,7 +35,7 @@ const GuestLogin = () => {
       });
       setAuthHeaders();
       setLoading(false);
-      // window.location.href = "/";
+      window.location.href = "/public";
     } catch (error) {
       logger.error(error);
       setLoading(false);
@@ -81,7 +81,9 @@ const GuestLogin = () => {
           label="Continue"
           type="submit"
           style="primary"
-          onClick={() => handleSubmit()}
+          onClick={() => {
+            handleSubmit();
+          }}
         />
         {/* </form> */}
       </div>
