@@ -86,15 +86,20 @@ const Menu = ({
         setCategory={setCategory}
         onCollapse={() => setIsInputCollapsed(true)}
       />
-      <MenuBar.Block
-        key={"All"}
-        label={"All"}
-        active={displayedArticles.category === "All"}
-        count={"10"}
-        onClick={() => {
-          sortArticles(displayedArticles.status, "All");
-        }}
-      />
+      {!foundCategories ? (
+        <MenuBar.Block
+          key={"All"}
+          label={"All"}
+          active={displayedArticles.category === "All"}
+          count={"10"}
+          onClick={() => {
+            sortArticles(displayedArticles.status, "All");
+          }}
+        />
+      ) : (
+        <div></div>
+      )}
+
       {foundCategories && foundCategories.length > 0 ? (
         foundCategories
           .sort((a, b) => (a.position > b.position ? 1 : -1))
@@ -110,7 +115,9 @@ const Menu = ({
             />
           ))
       ) : (
-        <MenuBar.Block label="No Category Found" />
+        <Typography style="body2" className="text-center">
+          No Category Found
+        </Typography>
       )}
     </MenuBar>
   );
