@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Close, Check, Category as CategoryIcon } from "@bigbinary/neeto-icons";
+import { Close, Check } from "@bigbinary/neeto-icons";
 import { Input } from "@bigbinary/neetoui";
 import { Button } from "@bigbinary/neetoui";
 import PropTypes from "prop-types";
@@ -20,7 +20,6 @@ const InputBar = ({
         placeholder="Add New Category"
         value={category}
         onChange={e => setCategory(e.target.value)}
-        prefix={<CategoryIcon />}
         {...props}
       />
       <Button size="large" style="text" icon={Check} onClick={handleSubmit} />
