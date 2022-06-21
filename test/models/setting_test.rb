@@ -10,7 +10,7 @@ class SettingTest < ActiveSupport::TestCase
     @settings = Settings.create(name: "Spinkart", password: "Welcome123")
   end
 
-  def test_site_name_should_not_be_valid_without_title
+  def test_site_name_should_not_be_valid_without_name
     @settings.name = ""
     assert_not @settings.valid?
   end

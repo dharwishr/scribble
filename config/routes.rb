@@ -4,6 +4,7 @@ Rails.application.routes.draw do
   constraints(lambda { |req| req.format == :json }) do
     resources :articles, except: %i[new edit], param: :slug
     resources :categories, except: %i[new edit], param: :id
+    resources :users, only: %i[create index]
     resources :eui, except: %i[new edit], param: :id
     resource :session, only: [:create, :destroy]
     resources :redirections, except: %i[new show edit]

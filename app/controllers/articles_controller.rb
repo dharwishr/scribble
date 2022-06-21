@@ -28,7 +28,7 @@ class ArticlesController < ApplicationController
 
   def destroy
     @article.destroy!
-    respond_with_json
+    respond_with_success("Article has been successfully deleted!") unless params.key?(:quiet)
   end
 
   private

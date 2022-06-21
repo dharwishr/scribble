@@ -25,6 +25,11 @@ class CategoriesController < ApplicationController
     respond_with_success("Category has been successfully updated!")
   end
 
+  def show
+    category = @category
+    respond_with_json({ category: category })
+  end
+
   def destroy
     @category.destroy!
     respond_with_json
