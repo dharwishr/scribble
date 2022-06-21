@@ -28,13 +28,13 @@ class ArticlesController < ApplicationController
 
   def destroy
     @article.destroy!
-    respond_with_json
+    respond_with_success("Article has been successfully deleted!") unless params.key?(:quiet)
   end
 
   private
 
     def article_params
-      params.require(:article).permit(:title, :body, :author, :assigned_category_id, :status)
+      params.require(:article).permit(:title, :body, :assigned_category_id, :status, :article_owner_id)
     end
 
     def load_article!

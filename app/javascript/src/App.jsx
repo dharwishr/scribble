@@ -17,6 +17,7 @@ import Dashboard from "components/Dashboard";
 import Settings from "components/Settings";
 
 import redirectionsApi from "./apis/redirections";
+import settingsApi from "./apis/settings";
 import CreateArticle from "./components/Articles/CreateArticle";
 import EditArticle from "./components/Articles/EditArticle";
 import Eui from "./components/Eui";
@@ -27,11 +28,13 @@ const App = () => {
   const [loading, setLoading] = useState(true);
   const authToken = getFromLocalStorage("authToken");
   const [redirections, setRedirections] = useState([]);
+  const [isPasswordEnabled, setIsPasswordEnabled] = useState();
   const isLoggedIn = !either(isNil, isEmpty)(authToken);
   const fetchRedirections = async () => {
     try {
       const response = await redirectionsApi.list();
-
+      const settings = await settingsApi.list();
+      setIsPasswordEnabled(settings.data.is_password_enabled);
       setRedirections(response.data.redirections);
       setLoading(false);
     } catch (error) {
@@ -69,12 +72,16 @@ const App = () => {
         <Route exact path="/settings" component={Settings} />
         <Route exact path="/login" component={GuestLogin} />
         <Route exact path="/public/:slug" component={Eui} />
-        <PrivateRoute
-          path="/public/"
-          redirectRoute="/login"
-          condition={isLoggedIn}
-          component={Eui}
-        />
+        {isPasswordEnabled ? (
+          <PrivateRoute
+            path="/public/"
+            redirectRoute="/login"
+            condition={isLoggedIn}
+            component={Eui}
+          />
+        ) : (
+          <Route exact path="/public" component={Eui} />
+        )}
       </Switch>
     </Router>
   );

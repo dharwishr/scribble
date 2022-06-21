@@ -11,7 +11,6 @@ const ArticleForm = ({
   body,
   setTitle,
   setBody,
-  setAuthor,
   categories,
   articleStatus,
   setArticleStatus,
@@ -24,9 +23,7 @@ const ArticleForm = ({
   //   label: category.category,
   // }));
 
-  useEffect(() => {
-    setAuthor("Oliver Smith");
-  }, []);
+  useEffect(() => {}, []);
 
   return (
     <form
