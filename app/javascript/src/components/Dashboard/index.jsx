@@ -26,7 +26,6 @@ const Dashboard = () => {
     status: true,
     action: true,
   });
-  const [isInputCollapsed, setIsInputCollapsed] = useState(true);
   const [showAlertSmall, setShowAlertSmall] = useState(false);
   const [articles, setArticles] = useState([]);
   const [searchArticle, setSearchArticle] = useState();
@@ -125,8 +124,7 @@ const Dashboard = () => {
       Toastr.success("Article has been successfully deleted.");
     }
   };
-  const createCategory = async event => {
-    event.preventDefault();
+  const createCategory = async () => {
     try {
       await categoriesApi.create({
         category: { category },
@@ -135,7 +133,6 @@ const Dashboard = () => {
       Toastr.error(error);
     }
     fetchCategories();
-    setIsInputCollapsed(!isInputCollapsed);
     setCategory(null);
   };
   const searchWhichCategory = e => {
@@ -185,12 +182,9 @@ const Dashboard = () => {
           sortArticles={sortArticles}
           searchWhichCategory={searchWhichCategory}
           searchCategory={searchCategory}
-          isInputCollapsed={isInputCollapsed}
-          setIsInputCollapsed={setIsInputCollapsed}
           category={category}
           setCategory={setCategory}
           createCategory={createCategory}
-          loading={loading}
           foundCategories={foundCategories}
           setFoundCategories={setFoundCategories}
         />

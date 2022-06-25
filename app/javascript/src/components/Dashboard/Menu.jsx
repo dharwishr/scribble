@@ -1,10 +1,8 @@
 import React, { useState } from "react";
 
-import { Search, Plus } from "@bigbinary/neeto-icons";
-import { Typography } from "@bigbinary/neetoui";
+import { Search, Plus, Check, Close } from "@bigbinary/neeto-icons";
+import { Typography, Input, Button } from "@bigbinary/neetoui";
 import { MenuBar } from "@bigbinary/neetoui/layouts";
-
-import InputBar from "../Common/InputBar";
 
 const Menu = ({
   counts,
@@ -14,13 +12,11 @@ const Menu = ({
   searchCategory,
   category,
   setCategory,
-  isInputCollapsed,
-  setIsInputCollapsed,
   createCategory,
-  loading,
   foundCategories,
 }) => {
   const [isSearchCollapsed, setIsSearchCollapsed] = useState(true);
+  const [isInputCollapsed, setIsInputCollapsed] = useState(true);
 
   return (
     <MenuBar showMenu={true} title="Articles">
@@ -53,11 +49,11 @@ const Menu = ({
         iconProps={[
           {
             icon: Search,
-            onClick: () => setIsSearchCollapsed(!isSearchCollapsed),
+            onClick: () => setIsSearchCollapsed(false),
           },
           {
             icon: Plus,
-            onClick: () => setIsInputCollapsed(!isInputCollapsed),
+            onClick: () => setIsInputCollapsed(false),
           },
         ]}
       >
@@ -78,14 +74,33 @@ const Menu = ({
         onCollapse={() => setIsSearchCollapsed(true)}
         placeholder="Search"
       />
-      <InputBar
-        collapse={isInputCollapsed}
-        category={category}
-        handleSubmit={createCategory}
-        loading={loading}
-        setCategory={setCategory}
-        onCollapse={() => setIsInputCollapsed(true)}
-      />
+      {!isInputCollapsed && (
+        <div className="mb-4 flex">
+          <Input
+            type="search"
+            placeholder="Add New Category"
+            value={category}
+            onChange={e => setCategory(e.target.value)}
+          />
+          <Button
+            size="large"
+            style="text"
+            icon={Check}
+            onClick={() => {
+              createCategory();
+              setIsInputCollapsed(true);
+            }}
+          />
+          <Button
+            size="large"
+            style="text"
+            icon={Close}
+            onClick={() => {
+              setIsInputCollapsed(true);
+            }}
+          />
+        </div>
+      )}
       {!foundCategories ? (
         <MenuBar.Block
           key={"All"}
