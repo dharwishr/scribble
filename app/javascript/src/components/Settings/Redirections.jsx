@@ -2,14 +2,16 @@ import React from "react";
 import { useState, useEffect } from "react";
 
 import { Edit, Delete, Close, Check, Plus } from "@bigbinary/neeto-icons";
-import { Typography } from "@bigbinary/neetoui";
-import { Input } from "@bigbinary/neetoui";
-import { Button } from "@bigbinary/neetoui";
-import { Table } from "@bigbinary/neetoui";
-import { PageLoader } from "@bigbinary/neetoui";
+import {
+  Typography,
+  Input,
+  Button,
+  Table,
+  PageLoader,
+} from "@bigbinary/neetoui";
 import { Form } from "antd";
 
-import redirectionsApi from "../../apis/redirections";
+import redirectionsApi from "apis/redirections";
 
 const Redirections = () => {
   const [redirections, setRedirections] = useState([]);
@@ -22,6 +24,7 @@ const Redirections = () => {
   const [editRow, setEditRow] = useState(null);
   const [addNew, setAddNew] = useState(false);
   const [form] = Form.useForm();
+
   const fetchRedirections = async () => {
     try {
       const response = await redirectionsApi.list();
@@ -32,6 +35,7 @@ const Redirections = () => {
       setLoading(false);
     }
   };
+
   const createRedirection = async () => {
     try {
       await redirectionsApi.create({
@@ -45,6 +49,7 @@ const Redirections = () => {
       setAddNew(false);
     }
   };
+
   const editRedirection = async () => {
     try {
       await redirectionsApi.update({
@@ -54,8 +59,6 @@ const Redirections = () => {
           to: editData.to,
         },
       });
-
-      // history.push("/");
     } catch (error) {
       logger.error(error);
     } finally {
@@ -72,12 +75,14 @@ const Redirections = () => {
       logger.error(error);
     }
   };
+
   const dataSource = redirections.map(redirection => ({
     key: redirection.id,
     from: redirection.from,
     to: redirection.to,
     action: redirection.id,
   }));
+
   const columns = [
     {
       title: "From Path",

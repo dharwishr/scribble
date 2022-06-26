@@ -4,12 +4,11 @@ import { useState, useEffect } from "react";
 import { PageLoader, Typography } from "@bigbinary/neetoui";
 import { Input, Button } from "@bigbinary/neetoui";
 
+import authApi from "apis/auth";
 import { setAuthHeaders } from "apis/axios";
-
-import authApi from "../../apis/auth";
-import organizationsApi from "../../apis/organizations";
-import LoginImage from "../../images/login.png";
-import { setToLocalStorage } from "../../utils/storage";
+import organizationsApi from "apis/organizations";
+import LoginImage from "images/login.png";
+import { setToLocalStorage } from "utils/storage";
 
 const GuestLogin = () => {
   const [password, setPassword] = useState();
@@ -29,7 +28,7 @@ const GuestLogin = () => {
   const handleSubmit = async () => {
     setLoading(true);
     try {
-      const response = await authApi.login({ login: { password } });
+      const response = await authApi.login({ password });
       setToLocalStorage({
         authToken: response.data.authentication_token,
       });

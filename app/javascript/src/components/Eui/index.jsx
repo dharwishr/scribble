@@ -1,18 +1,18 @@
 import React from "react";
 import { useState, useEffect } from "react";
 
-import { PageLoader } from "@bigbinary/neetoui";
-import { Typography } from "@bigbinary/neetoui";
-import { Accordion } from "@bigbinary/neetoui";
-import { Label } from "@bigbinary/neetoui";
-import { Tag } from "@bigbinary/neetoui";
-import { MenuBar } from "@bigbinary/neetoui/layouts";
-import { Container } from "@bigbinary/neetoui/layouts";
-import { useParams } from "react-router-dom";
-import { useHistory } from "react-router-dom";
+import {
+  PageLoader,
+  Typography,
+  Accordion,
+  Label,
+  Tag,
+} from "@bigbinary/neetoui";
+import { MenuBar, Container } from "@bigbinary/neetoui/layouts";
+import { useParams, useHistory } from "react-router-dom";
 
-import euiApi from "../../apis/eui";
-import organizationsApi from "../../apis/organizations";
+import euiApi from "apis/eui";
+import organizationsApi from "apis/organizations";
 
 const Eui = () => {
   const [article, setArticle] = useState([]);

@@ -8,7 +8,7 @@ import {
   PageLoader,
 } from "@bigbinary/neetoui";
 
-import organizationsApi from "../../apis/organizations";
+import organizationsApi from "apis/organizations";
 
 const General = () => {
   const [isPasswordEnabled, setIsPasswordEnabled] = useState(false);
@@ -49,6 +49,7 @@ const General = () => {
   useEffect(() => {
     fetchSettings();
   }, []);
+
   if (loading) {
     return (
       <div className="h-screen w-screen">

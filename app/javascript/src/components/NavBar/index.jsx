@@ -8,6 +8,7 @@ import NavItem from "./NavItem";
 
 const NavBar = () => {
   const history = useHistory();
+
   return (
     <nav className="border sticky top-0 z-50 bg-white">
       <div className="max-w-7xl mx-auto px-2 sm:px-4 lg:px-8">

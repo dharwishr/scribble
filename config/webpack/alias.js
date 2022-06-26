@@ -6,6 +6,7 @@ module.exports = {
       components: "src/components",
       constants: "src/constants",
       utils: "src/utils",
+      images: "src/images"
     },
   },
 };
