@@ -12,7 +12,7 @@ import { useParams } from "react-router-dom";
 import { useHistory } from "react-router-dom";
 
 import euiApi from "../../apis/eui";
-import settingsApi from "../../apis/settings";
+import organizationsApi from "../../apis/organizations";
 
 const Eui = () => {
   const [article, setArticle] = useState([]);
@@ -33,7 +33,7 @@ const Eui = () => {
   };
   const fetchSiteData = async () => {
     try {
-      const response = await settingsApi.list();
+      const response = await organizationsApi.get();
       setSiteName(response.data.site_name);
       setLoading(false);
     } catch (error) {

@@ -1,20 +1,18 @@
 import React from "react";
+import { useState } from "react";
 
 import { Edit, Delete } from "@bigbinary/neeto-icons";
-import { Table, Button } from "@bigbinary/neetoui";
-import { Alert } from "@bigbinary/neetoui";
-import { Tag } from "@bigbinary/neetoui";
+import { Table, Button, Alert, Tag } from "@bigbinary/neetoui";
 import { useHistory } from "react-router-dom";
 
 const DashboradTable = ({
   columnVisibility,
   destroyArticle,
-  setShowAlertSmall,
-  fetchArticles,
   foundArticles,
-  showAlertSmall,
 }) => {
   const history = useHistory();
+  const [showAlertSmall, setShowAlertSmall] = useState(false);
+
   const articleColumns = [
     {
       title: "TITLE",
@@ -90,7 +88,6 @@ const DashboradTable = ({
             onSubmit={() => {
               destroyArticle(record.slug);
               setShowAlertSmall(false);
-              fetchArticles();
             }}
           />
         </>

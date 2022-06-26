@@ -6,7 +6,7 @@ import { Route, Switch, BrowserRouter as Router } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 
 import { registerIntercepts, setAuthHeaders } from "apis/axios";
-import settingsApi from "apis/settings";
+import organizationsApi from "apis/organizations";
 import { initializeLogger } from "common/logger";
 import CreateArticle from "components/Articles/CreateArticle";
 import EditArticle from "components/Articles/EditArticle";
@@ -24,8 +24,8 @@ const App = () => {
   const isLoggedIn = !either(isNil, isEmpty)(authToken);
   const fetchRedirections = async () => {
     try {
-      const settings = await settingsApi.list();
-      setIsPasswordEnabled(settings.data.is_password_enabled);
+      const organizations = await organizationsApi.get();
+      setIsPasswordEnabled(organizations.data.is_password_enabled);
       setLoading(false);
     } catch (error) {
       logger.error(error);

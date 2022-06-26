@@ -4,7 +4,7 @@ class CategoriesController < ApplicationController
   skip_before_action :authenticate_user_using_x_auth_token
   before_action :load_category!, only: %i[update destroy]
   def index
-    @categories = Category.all
+    @categories = Category.all.order("position ASC")
   end
 
   def create
@@ -38,7 +38,7 @@ class CategoriesController < ApplicationController
   private
 
     def category_params
-      params.require(:category).permit(:id, :category, :position)
+      params.permit(:id, :category, :position)
     end
 
     def load_category!

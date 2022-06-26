@@ -1,19 +1,30 @@
 import React, { useState, useEffect } from "react";
 
 import { PageLoader } from "@bigbinary/neetoui";
-import { MenuBar } from "@bigbinary/neetoui/layouts";
-import { Container } from "@bigbinary/neetoui/layouts";
+import { Container, MenuBar } from "@bigbinary/neetoui/layouts";
+
+import NavBar from "components/NavBar";
 
 import General from "./General";
 import ManageCategories from "./ManageCategories";
 import Redirections from "./Redirections";
 
-import NavBar from "../NavBar";
-
 const Settings = () => {
   const [showMenu, setShowMenu] = useState(false);
   const [loading, setLoading] = useState(true);
   const [displayMenu, setDisplayMenu] = useState("General");
+
+  const switchDisplay = () => {
+    if (displayMenu === "General") {
+      return <General />;
+    } else if (displayMenu === "Redirections") {
+      return <Redirections />;
+    } else if (displayMenu === "Manage Category") {
+      return <ManageCategories />;
+    }
+
+    return 1;
+  };
 
   useEffect(() => {
     setLoading(false);
@@ -27,17 +38,6 @@ const Settings = () => {
       </div>
     );
   }
-  const switchDisplay = () => {
-    if (displayMenu === "General") {
-      return <General />;
-    } else if (displayMenu === "Redirections") {
-      return <Redirections />;
-    } else if (displayMenu === "Manage Category") {
-      return <ManageCategories />;
-    }
-
-    return 1;
-  };
 
   return (
     <div>

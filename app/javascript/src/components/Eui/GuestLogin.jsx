@@ -7,7 +7,7 @@ import { Input, Button } from "@bigbinary/neetoui";
 import { setAuthHeaders } from "apis/axios";
 
 import authApi from "../../apis/auth";
-import settingsApi from "../../apis/settings";
+import organizationsApi from "../../apis/organizations";
 import LoginImage from "../../images/login.png";
 import { setToLocalStorage } from "../../utils/storage";
 
@@ -18,7 +18,7 @@ const GuestLogin = () => {
 
   const fetchSiteName = async () => {
     try {
-      const response = await settingsApi.list();
+      const response = await organizationsApi.get();
       setSiteName(response.data.site_name);
       setLoading(false);
     } catch (error) {

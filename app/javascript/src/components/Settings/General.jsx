@@ -1,21 +1,24 @@
 import React, { useState, useEffect } from "react";
 
-import { Typography } from "@bigbinary/neetoui";
-import { Input } from "@bigbinary/neetoui";
-import { Checkbox } from "@bigbinary/neetoui";
-import { Button } from "@bigbinary/neetoui";
-import { PageLoader } from "@bigbinary/neetoui";
+import {
+  Typography,
+  Input,
+  Checkbox,
+  Button,
+  PageLoader,
+} from "@bigbinary/neetoui";
 
-import settingsApi from "../../apis/settings";
+import organizationsApi from "../../apis/organizations";
 
 const General = () => {
   const [isPasswordEnabled, setIsPasswordEnabled] = useState(false);
   const [loading, setLoading] = useState(true);
   const [name, setName] = useState();
   const [password, setPassword] = useState();
+
   const fetchSettings = async () => {
     try {
-      const response = await settingsApi.list();
+      const response = await organizationsApi.get();
       setName(response.data.site_name);
       setIsPasswordEnabled(response.data.is_password_enabled);
       setLoading(false);
@@ -24,11 +27,12 @@ const General = () => {
       setLoading(false);
     }
   };
+
   const handleSubmit = async event => {
     event.preventDefault();
     setLoading(true);
     try {
-      await settingsApi.update({
+      await organizationsApi.update({
         payload: {
           name,
           password,
@@ -36,7 +40,6 @@ const General = () => {
         },
       });
       setLoading(false);
-      // history.push("/");
     } catch (error) {
       logger.error(error);
       setLoading(false);
@@ -73,10 +76,7 @@ const General = () => {
           checked={isPasswordEnabled}
           id="checkbox_name"
           label="Password Protect Knowledge Base"
-          onChange={
-            () => setIsPasswordEnabled(!isPasswordEnabled)
-            // function noRefCheck() {}
-          }
+          onChange={() => setIsPasswordEnabled(true)}
         />
         {isPasswordEnabled ? (
           <Input
@@ -91,7 +91,7 @@ const General = () => {
           <Button label="Save Changes" type="submit" style="primary" />
           <Button
             label="Cancel"
-            onClick={() => setIsPasswordEnabled(!isPasswordEnabled)}
+            onClick={() => setIsPasswordEnabled(false)}
             style="text"
           />
         </div>

@@ -43,7 +43,7 @@ class ApplicationController < ActionController::Base
 
     def authenticate_user_using_x_auth_token
       auth_token = request.headers["X-Auth-Token"].to_s
-      user = Settings.first
+      user = Organizations.first
       is_valid_token = auth_token && ActiveSupport::SecurityUtils.secure_compare(user.authentication_token, auth_token)
       if is_valid_token
         @current_user = user

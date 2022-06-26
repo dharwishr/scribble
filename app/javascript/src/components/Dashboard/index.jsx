@@ -1,19 +1,25 @@
 import React, { useState, useEffect } from "react";
 
-import { PageLoader } from "@bigbinary/neetoui";
-import { Toastr } from "@bigbinary/neetoui";
+import { PageLoader, Toastr } from "@bigbinary/neetoui";
 import { Container } from "@bigbinary/neetoui/layouts";
 
 import articlesApi from "apis/articles";
 import categoriesApi from "apis/categories";
+import NavBar from "components/NavBar";
 
 import DashboradTable from "./DashboradTable";
 import Menu from "./Menu";
 import SubHead from "./SubHead";
 
-import NavBar from "../NavBar";
-
 const Dashboard = () => {
+  const [articles, setArticles] = useState([]);
+  const [searchArticle, setSearchArticle] = useState();
+  const [foundArticles, setFoundArticles] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [searchCategory, setSearchCategory] = useState();
+  const [foundCategories, setFoundCategories] = useState();
+  const [category, setCategory] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [displayedArticles, setDisplayedArticles] = useState({
     status: "All",
     category: "All",
@@ -26,21 +32,7 @@ const Dashboard = () => {
     status: true,
     action: true,
   });
-  const [showAlertSmall, setShowAlertSmall] = useState(false);
-  const [articles, setArticles] = useState([]);
-  const [searchArticle, setSearchArticle] = useState();
-  const [foundArticles, setFoundArticles] = useState([]);
-  const [category, setCategory] = useState([]);
-  const [searchCategory, setSearchCategory] = useState();
-  const [categories, setCategories] = useState([]);
-  const [foundCategories, setFoundCategories] = useState();
-  const [loading, setLoading] = useState(true);
 
-  const [counts, setCounts] = useState({
-    draft: "",
-    published: "",
-    total: "",
-  });
   const mapArticles = input => {
     const data = input.map(article => ({
       key: article.id,
@@ -53,24 +45,19 @@ const Dashboard = () => {
     }));
     return data;
   };
+
   const fetchArticles = async () => {
     try {
       const response = await articlesApi.list();
       setArticles(mapArticles(response.data.articles.all));
       setFoundArticles(mapArticles(response.data.articles.all));
-      setCounts({
-        draft: response.data.articles["draft_count"],
-        published: response.data.articles["published_count"],
-        total:
-          response.data.articles["draft_count"] +
-          response.data.articles["published_count"],
-      });
       setLoading(false);
     } catch (error) {
-      Toastr.error(error);
+      Toastr.error("Error while getting articles");
       setLoading(false);
     }
   };
+
   const fetchCategories = async () => {
     try {
       const response = await categoriesApi.list();
@@ -78,18 +65,11 @@ const Dashboard = () => {
       setFoundCategories(response.data.categories);
       setLoading(false);
     } catch (error) {
-      Toastr.error(error);
+      Toastr.error("Error while getting categories");
       setLoading(false);
     }
   };
-  const loadData = async () => {
-    try {
-      await fetchArticles();
-      await fetchCategories();
-    } catch (error) {
-      Toastr.error(error);
-    }
-  };
+
   const sortArticles = (
     status = displayedArticles.status,
     category = displayedArticles.category
@@ -114,6 +94,17 @@ const Dashboard = () => {
       setFoundArticles(articles);
     }
   };
+
+  const createCategory = async () => {
+    try {
+      await categoriesApi.create({ category });
+    } catch (error) {
+      Toastr.error(error);
+    }
+    fetchCategories();
+    setCategory(null);
+  };
+
   const destroyArticle = async slug => {
     try {
       await articlesApi.destroy(slug);
@@ -121,20 +112,10 @@ const Dashboard = () => {
     } catch (error) {
       Toastr.error(error);
     } finally {
-      Toastr.success("Article has been successfully deleted.");
+      fetchArticles();
     }
   };
-  const createCategory = async () => {
-    try {
-      await categoriesApi.create({
-        category: { category },
-      });
-    } catch (error) {
-      Toastr.error(error);
-    }
-    fetchCategories();
-    setCategory(null);
-  };
+
   const searchWhichCategory = e => {
     const keyword = e.target.value;
     if (keyword !== "") {
@@ -147,6 +128,7 @@ const Dashboard = () => {
     }
     setSearchCategory(keyword);
   };
+
   const searchWhichArticle = e => {
     const keyword = e.target.value;
     if (keyword !== "") {
@@ -159,8 +141,10 @@ const Dashboard = () => {
     }
     setSearchArticle(keyword);
   };
+
   useEffect(() => {
-    loadData();
+    fetchArticles();
+    fetchCategories();
     setLoading(false);
   }, []);
 
@@ -177,7 +161,11 @@ const Dashboard = () => {
       <NavBar></NavBar>
       <div className="flex">
         <Menu
-          counts={counts}
+          counts={{
+            draft: articles["draft_count"],
+            published: articles["published_count"],
+            total: articles["draft_count"] + articles["published_count"],
+          }}
           displayedArticles={displayedArticles}
           sortArticles={sortArticles}
           searchWhichCategory={searchWhichCategory}
@@ -188,7 +176,6 @@ const Dashboard = () => {
           foundCategories={foundCategories}
           setFoundCategories={setFoundCategories}
         />
-
         <Container>
           <SubHead
             searchWhichArticle={searchWhichArticle}
@@ -199,10 +186,8 @@ const Dashboard = () => {
           <DashboradTable
             columnVisibility={columnVisibility}
             destroyArticle={destroyArticle}
-            setShowAlertSmall={setShowAlertSmall}
             fetchArticles={fetchArticles}
             foundArticles={foundArticles}
-            showAlertSmall={showAlertSmall}
           />
         </Container>
         {logger.error(foundArticles)}

@@ -44,7 +44,6 @@ const Menu = ({
           sortArticles("published");
         }}
       />
-
       <MenuBar.SubTitle
         iconProps={[
           {
@@ -101,7 +100,7 @@ const Menu = ({
           />
         </div>
       )}
-      {!foundCategories ? (
+      {!foundCategories && (
         <MenuBar.Block
           key={"All"}
           label={"All"}
@@ -111,24 +110,19 @@ const Menu = ({
             sortArticles(displayedArticles.status, "All");
           }}
         />
-      ) : (
-        <div></div>
       )}
-
       {foundCategories && foundCategories.length > 0 ? (
-        foundCategories
-          .sort((a, b) => (a.position > b.position ? 1 : -1))
-          .map(each => (
-            <MenuBar.Block
-              key={each.position}
-              label={each.category}
-              active={displayedArticles.category === each.category}
-              count={each.count}
-              onClick={() => {
-                sortArticles(displayedArticles.status, each.category);
-              }}
-            />
-          ))
+        foundCategories.map(each => (
+          <MenuBar.Block
+            key={each.position}
+            label={each.category}
+            active={displayedArticles.category === each.category}
+            count={each.count}
+            onClick={() => {
+              sortArticles(displayedArticles.status, each.category);
+            }}
+          />
+        ))
       ) : (
         <Typography style="body2" className="text-center">
           No Category Found

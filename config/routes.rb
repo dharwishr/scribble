@@ -8,7 +8,7 @@ Rails.application.routes.draw do
     resources :eui, except: %i[new edit], param: :id
     resource :session, only: [:create, :destroy]
     resources :redirections, except: %i[new show edit]
-    resources :settings, except: %i[new edit], param: :id
+    resources :organizations, except: %i[new edit], param: :id
   end
 
   root "home#index"

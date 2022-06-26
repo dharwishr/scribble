@@ -12,6 +12,7 @@ const SubHead = ({
   setColumnVisibility,
 }) => {
   const history = useHistory();
+
   return (
     <SubHeader
       rightActionBlock={

@@ -1,12 +1,20 @@
 import React, { useState, useEffect } from "react";
 
-import { MenuOutlined } from "@ant-design/icons";
-import { Edit, Delete, Close, Check, Plus } from "@bigbinary/neeto-icons";
-import { Typography } from "@bigbinary/neetoui";
-import { PageLoader } from "@bigbinary/neetoui";
-import { Table } from "@bigbinary/neetoui";
-import { Button } from "@bigbinary/neetoui";
-import { Input } from "@bigbinary/neetoui";
+import {
+  Edit,
+  Delete,
+  Close,
+  Check,
+  Plus,
+  Reorder,
+} from "@bigbinary/neeto-icons";
+import {
+  Typography,
+  PageLoader,
+  Table,
+  Button,
+  Input,
+} from "@bigbinary/neetoui";
 import { Form } from "antd";
 import {
   SortableContainer,
@@ -33,14 +41,12 @@ const ManageCategories = () => {
   const fetchCategories = async () => {
     try {
       const response = await categoriesApi.list();
-      const data = response.data.categories
-        .sort((a, b) => a.position - b.position)
-        .map(category => ({
-          key: category.id,
-          category: category.category,
-          action: category.id,
-          index: category.position,
-        }));
+      const data = response.data.categories.map(category => ({
+        key: category.id,
+        category: category.category,
+        action: category.id,
+        index: category.position,
+      }));
       setCategories(data);
       setDataSource(data);
       // setUpdatedCategories(data);
@@ -67,7 +73,7 @@ const ManageCategories = () => {
       await categoriesApi.update({
         id: editData.id,
         payload: {
-          category: { category: editData.category },
+          title: editData.category,
         },
       });
       // history.push("/");
@@ -83,7 +89,7 @@ const ManageCategories = () => {
       await categoriesApi.update({
         id: id,
         payload: {
-          category: { position: position },
+          position: position,
         },
       });
       // history.push("/");
@@ -102,7 +108,7 @@ const ManageCategories = () => {
     }
   };
   const DragHandle = SortableHandle(() => (
-    <MenuOutlined
+    <Reorder
       style={{
         cursor: "grab",
         color: "#999",
