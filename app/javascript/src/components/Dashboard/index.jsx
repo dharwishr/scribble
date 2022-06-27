@@ -190,7 +190,6 @@ const Dashboard = () => {
             foundArticles={foundArticles}
           />
         </Container>
-        {logger.error(foundArticles)}
       </div>
     </div>
   );
