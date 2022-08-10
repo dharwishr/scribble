@@ -10,8 +10,8 @@ const Menu = ({
   sortArticles,
   searchWhichCategory,
   searchCategory,
-  category,
-  setCategory,
+  categoryTitle,
+  setCategoryTitle,
   createCategory,
   foundCategories,
 }) => {
@@ -78,8 +78,8 @@ const Menu = ({
           <Input
             type="search"
             placeholder="Add New Category"
-            value={category}
-            onChange={e => setCategory(e.target.value)}
+            value={categoryTitle}
+            onChange={e => setCategoryTitle(e.target.value)}
           />
           <Button
             size="large"
@@ -111,15 +111,15 @@ const Menu = ({
           }}
         />
       )}
-      {foundCategories && foundCategories.length > 0 ? (
-        foundCategories.map(each => (
+      {foundCategories?.length ? (
+        foundCategories.map(category => (
           <MenuBar.Block
-            key={each.position}
-            label={each.category}
-            active={displayedArticles.category === each.category}
-            count={each.count}
+            key={category.position}
+            label={category.title}
+            active={displayedArticles.category === category.title}
+            count={category.count}
             onClick={() => {
-              sortArticles(displayedArticles.status, each.category);
+              sortArticles(displayedArticles.status, category.title);
             }}
           />
         ))

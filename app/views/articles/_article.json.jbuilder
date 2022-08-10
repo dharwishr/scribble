@@ -10,5 +10,5 @@ json.body article.body
 json.assigned_category do
   json.extract! article.category,
     :id,
-    :category
+    :title
 end

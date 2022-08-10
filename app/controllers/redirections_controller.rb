@@ -1,37 +1,34 @@
 # frozen_string_literal: true
 
 class RedirectionsController < ApplicationController
-  skip_before_action :authenticate_user_using_x_auth_token
   before_action :load_redirection!, only: %i[update destroy]
 
   def index
-    @redirections = Redirections.all
+    @redirections = Redirection.all
   end
 
   def create
-    redirection = Redirections.new(redirection_params)
-    redirection.save!
-    respond_with_success("successfully_created")
+    Redirection.create!(from: "/#{redirection_params[:from]}", to: "/#{redirection_params[:to]}")
+    respond_with_success(t("successfully_created", entity: "Redirection"))
+  end
+
+  def update
+    @redirection.update!(from: "/#{redirection_params[:from]}", to: "/#{redirection_params[:to]}")
+    respond_with_success(t("successfully_updated", entity: "Redirection"))
   end
 
   def destroy
     @redirection.destroy!
-    respond_with_json
-  end
-
-  def update
-    redirection = Redirections.find_by!(id: params[:id])
-    redirection.update!(redirection_params)
-    respond_with_success("successfully_updated")
+    respond_with_success(t("successfully_deleted", entity: "Redirection"))
   end
 
   private
 
     def redirection_params
-      params.permit(:id, :from, :to)
+      params.require(:redirection).permit(:from, :to)
     end
 
     def load_redirection!
-      @redirection = Redirections.find_by!(id: params[:id])
+      @redirection = Redirection.find_by!(id: params[:id])
     end
 end

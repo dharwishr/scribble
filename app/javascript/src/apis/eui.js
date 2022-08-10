@@ -1,8 +1,8 @@
 import axios from "axios";
 
-const list = () => axios.get("/eui");
+const list = () => axios.get("/eui/categories");
 
-const show = slug => axios.get(`/eui/${slug}`);
+const show = slug => axios.get(`/eui/articles/${slug}`);
 
 const euiApi = {
   list,

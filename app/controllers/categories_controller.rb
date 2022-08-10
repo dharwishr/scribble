@@ -1,44 +1,31 @@
 # frozen_string_literal: true
 
 class CategoriesController < ApplicationController
-  skip_before_action :authenticate_user_using_x_auth_token
   before_action :load_category!, only: %i[update destroy]
+
   def index
     @categories = Category.all.order("position ASC")
   end
 
   def create
-    category = Category.new(category_params)
-    last_position_number = Category.maximum(:position)
-    if last_position_number
-      category.position = last_position_number.to_i + 1
-    else
-      category.position = 1
-    end
-    category.save!
-    respond_with_success("Category has been successfully created!")
+    Category.create!(category_params)
+    respond_with_success(t("successfully_created", entity: "Category"))
   end
 
   def update
-    category = Category.find_by!(id: params[:id])
-    category.update!(category_params)
-    respond_with_success("Category has been successfully updated!")
-  end
-
-  def show
-    category = @category
-    respond_with_json({ category: category })
+    @category.update!(category_params)
+    respond_with_success(t("successfully_updated", entity: "Category"))
   end
 
   def destroy
     @category.destroy!
-    respond_with_json
+    respond_with_success(t("successfully_deleted", entity: "Category"))
   end
 
   private
 
     def category_params
-      params.permit(:id, :category, :position)
+      params.require(:category).permit(:id, :title, :position)
     end
 
     def load_category!

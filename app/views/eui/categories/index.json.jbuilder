@@ -3,7 +3,7 @@
 json.categories @categories do | category |
   json.extract! category,
     :id,
-    :category,
+    :title,
     :position
   json.articles category.articles
 end

@@ -2,7 +2,7 @@
 
 FactoryBot.define do
   factory :redirection do
-    from { Faker::Name.first_name.gsub(/\W/, "") }
-    to { Faker::Name.first_name.gsub(/\W/, "") }
+    from { "/#{Faker::Internet.slug}" }
+    to { "/#{Faker::Internet.slug}" }
   end
 end

@@ -27,6 +27,7 @@ const EditArticle = () => {
       logger.error(error);
     }
   };
+
   const fetchArticleDetails = async () => {
     try {
       const response = await articlesApi.show(slug);
@@ -35,13 +36,14 @@ const EditArticle = () => {
       logger.error(error);
     }
   };
+
   const loadData = async () => {
     try {
-      await fetchCategoryDetails();
-      await fetchArticleDetails();
-      setPageLoading(false);
+      setPageLoading(true);
+      await Promise.all([fetchCategoryDetails(), fetchArticleDetails()]);
     } catch (error) {
       logger.error(error);
+    } finally {
       setPageLoading(false);
     }
   };

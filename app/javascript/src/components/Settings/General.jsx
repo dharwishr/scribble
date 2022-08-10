@@ -13,17 +13,18 @@ import organizationsApi from "apis/organizations";
 const General = () => {
   const [isPasswordEnabled, setIsPasswordEnabled] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [name, setName] = useState();
+  const [organizationName, setOrganizationName] = useState();
   const [password, setPassword] = useState();
 
   const fetchSettings = async () => {
     try {
+      setLoading(true);
       const response = await organizationsApi.get();
-      setName(response.data.site_name);
+      setOrganizationName(response.data.organization_name);
       setIsPasswordEnabled(response.data.is_password_enabled);
-      setLoading(false);
     } catch (error) {
       logger.error(error);
+    } finally {
       setLoading(false);
     }
   };
@@ -34,14 +35,14 @@ const General = () => {
     try {
       await organizationsApi.update({
         payload: {
-          name,
+          name: organizationName,
           password,
-          password_enabled: isPasswordEnabled,
+          is_password_enabled: isPasswordEnabled,
         },
       });
-      setLoading(false);
     } catch (error) {
       logger.error(error);
+    } finally {
       setLoading(false);
     }
   };
@@ -61,23 +62,26 @@ const General = () => {
   return (
     <div className="mx-auto mt-10 space-y-5">
       <Typography style="h2">General Settings</Typography>
-
       <Typography style="body2">
         Configure general attributes of Scribble.
       </Typography>
       <form onSubmit={handleSubmit} className="mx-auto max-w-lg">
         <Input
-          label="Site Name"
-          value={name}
-          onChange={e => setName(e.target.value)}
-          helpText="Customize the site name which is used to show the site name in Open Graph Tags."
+          label="Organization Name"
+          value={organizationName}
+          onChange={e => setOrganizationName(e.target.value)}
+          helpText="Customize the Organization Name which is used to show as the site name in Open Graph Tags."
         />
         <div className="border-b mt-5 mb-5"></div>
         <Checkbox
           checked={isPasswordEnabled}
           id="checkbox_name"
           label="Password Protect Knowledge Base"
-          onChange={() => setIsPasswordEnabled(true)}
+          onChange={() => {
+            setIsPasswordEnabled(
+              prevIsPasswordEnabled => !prevIsPasswordEnabled
+            );
+          }}
         />
         {isPasswordEnabled ? (
           <Input

@@ -16,9 +16,9 @@ const Dashboard = () => {
   const [searchArticle, setSearchArticle] = useState();
   const [foundArticles, setFoundArticles] = useState([]);
   const [categories, setCategories] = useState([]);
-  const [searchCategory, setSearchCategory] = useState();
-  const [foundCategories, setFoundCategories] = useState();
-  const [category, setCategory] = useState([]);
+  const [searchCategory, setSearchCategory] = useState("");
+  const [foundCategories, setFoundCategories] = useState([]);
+  const [categoryTitle, setCategoryTitle] = useState([]);
   const [loading, setLoading] = useState(true);
   const [displayedArticles, setDisplayedArticles] = useState({
     status: "All",
@@ -33,6 +33,10 @@ const Dashboard = () => {
     action: true,
   });
 
+  useEffect(() => {
+    loadData();
+  }, []);
+
   const mapArticles = input => {
     const data = input.map(article => ({
       key: article.id,
@@ -41,7 +45,7 @@ const Dashboard = () => {
       status: article.status,
       date: article.date,
       slug: article.slug,
-      category: article.assigned_category.category,
+      category: article.assigned_category.title,
     }));
     return data;
   };
@@ -51,10 +55,8 @@ const Dashboard = () => {
       const response = await articlesApi.list();
       setArticles(mapArticles(response.data.articles.all));
       setFoundArticles(mapArticles(response.data.articles.all));
-      setLoading(false);
     } catch (error) {
       Toastr.error("Error while getting articles");
-      setLoading(false);
     }
   };
 
@@ -63,9 +65,18 @@ const Dashboard = () => {
       const response = await categoriesApi.list();
       setCategories(response.data.categories);
       setFoundCategories(response.data.categories);
-      setLoading(false);
     } catch (error) {
       Toastr.error("Error while getting categories");
+    }
+  };
+
+  const loadData = async () => {
+    try {
+      setLoading(true);
+      await Promise.all([fetchCategories(), fetchArticles()]);
+    } catch (error) {
+      logger.error(error);
+    } finally {
       setLoading(false);
     }
   };
@@ -97,30 +108,29 @@ const Dashboard = () => {
 
   const createCategory = async () => {
     try {
-      await categoriesApi.create({ category });
+      await categoriesApi.create({ title: categoryTitle });
+      await fetchCategories();
     } catch (error) {
-      Toastr.error(error);
+      logger.error(error);
+    } finally {
+      setCategoryTitle(null);
     }
-    fetchCategories();
-    setCategory(null);
   };
 
   const destroyArticle = async slug => {
     try {
       await articlesApi.destroy(slug);
-      fetchCategories();
+      loadData();
     } catch (error) {
-      Toastr.error(error);
-    } finally {
-      fetchArticles();
+      logger.error(error);
     }
   };
 
   const searchWhichCategory = e => {
     const keyword = e.target.value;
     if (keyword !== "") {
-      const results = categories.filter(each =>
-        each.category.toLowerCase().startsWith(keyword.toLowerCase())
+      const results = categories.filter(({ title }) =>
+        title.toLowerCase().startsWith(keyword.toLowerCase())
       );
       setFoundCategories(results);
     } else {
@@ -141,12 +151,6 @@ const Dashboard = () => {
     }
     setSearchArticle(keyword);
   };
-
-  useEffect(() => {
-    fetchArticles();
-    fetchCategories();
-    setLoading(false);
-  }, []);
 
   if (loading) {
     return (
@@ -170,8 +174,8 @@ const Dashboard = () => {
           sortArticles={sortArticles}
           searchWhichCategory={searchWhichCategory}
           searchCategory={searchCategory}
-          category={category}
-          setCategory={setCategory}
+          categoryTitle={categoryTitle}
+          setCategoryTitle={setCategoryTitle}
           createCategory={createCategory}
           foundCategories={foundCategories}
           setFoundCategories={setFoundCategories}

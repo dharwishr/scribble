@@ -10,3 +10,8 @@ en:
   task:
     slug:
       immutable: "is immutable!"
+  redirection:
+    whitespace: "White space is not allowed!"
+    same_value: "Values cannot be same!"
+    redirection_loop: "Inputs will cause a redirection loop!"
+    input_not_starts_with_slash: "Inputs are not starting with '/'"

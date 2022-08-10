@@ -2,55 +2,29 @@ import React, { useState, useEffect } from "react";
 
 import { PageLoader } from "@bigbinary/neetoui";
 
-import articlesApi from "apis/articles";
 import categoriesApi from "apis/categories";
 import Container from "components/Container";
 
 import ArticleForm from "./Form/ArticleForm";
 
 const CreateArticle = () => {
-  const [title, setTitle] = useState("");
-  const [body, setBody] = useState("");
   const [categories, setCategories] = useState([]);
-  const [categoryId, setCategoryId] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [articleStatus, setArticleStatus] = useState("draft");
   const [pageLoading, setPageLoading] = useState(true);
-
-  const handleSubmit = async () => {
-    setLoading(true);
-    try {
-      await articlesApi.create({
-        article: {
-          title,
-          body,
-          article_owner_id: 1,
-          assigned_category_id: categoryId.value,
-          status: articleStatus,
-        },
-      });
-      setLoading(false);
-      history.push("/");
-    } catch (error) {
-      logger.error(error);
-      setLoading(false);
-    }
-  };
 
   const fetchCategoryDetails = async () => {
     try {
+      setPageLoading(true);
       const response = await categoriesApi.list();
       setCategories(response.data.categories);
-      setPageLoading(false);
     } catch (error) {
       logger.error(error);
+    } finally {
       setPageLoading(false);
     }
   };
 
   useEffect(() => {
     fetchCategoryDetails();
-    setPageLoading(false);
   }, []);
 
   if (pageLoading) {
@@ -59,19 +33,7 @@ const CreateArticle = () => {
 
   return (
     <Container>
-      <ArticleForm
-        title={title}
-        body={body}
-        setTitle={setTitle}
-        setBody={setBody}
-        categories={categories}
-        categoryId={categoryId}
-        setCategoryId={setCategoryId}
-        loading={loading}
-        handleSubmit={handleSubmit}
-        articleStatus={articleStatus}
-        setArticleStatus={setArticleStatus}
-      />
+      <ArticleForm categories={categories} />
     </Container>
   );
 };

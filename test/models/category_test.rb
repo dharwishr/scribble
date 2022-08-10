@@ -9,7 +9,7 @@ class CategoryTest < ActiveSupport::TestCase
 
   def test_values_of_created_at_and_updated_at
     category = Category.new(
-      category: "This is a test category")
+      title: "This is a test category")
     assert_nil category.created_at
     assert_nil category.updated_at
 
@@ -17,14 +17,14 @@ class CategoryTest < ActiveSupport::TestCase
     assert_not_nil category.created_at
     assert_equal category.updated_at, category.created_at
 
-    category.update!(category: "This is a updated category")
+    category.update!(title: "This is a updated category")
     assert_not_equal category.updated_at, category.created_at
   end
 
   def test_category_should_not_be_valid_and_saved_without_name
-    @category.category = ""
+    @category.title = ""
     assert_not @category.valid?
-    assert_includes @category.errors.full_messages, "Category can't be blank"
+    assert_includes @category.errors.full_messages, "Title can't be blank"
   end
 
   def test_exception_raised

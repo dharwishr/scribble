@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
 class Category < ApplicationRecord
-  has_many :articles, foreign_key: :assigned_category_id, class_name: "Article"
+  MAX_CATEGORY_LENGTH = 35
+  has_many :articles, dependent: :delete_all
+  validates :title, presence: true, length: { maximum: MAX_CATEGORY_LENGTH }
   acts_as_list
-  validates :category, presence: true, length: { maximum: 35 }
 end

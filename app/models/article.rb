@@ -2,25 +2,19 @@
 
 class Article < ApplicationRecord
   MAX_TITLE_LENGTH = 50
+
   enum status: { draft: 0, published: 1 }
 
-  belongs_to :category, foreign_key: "assigned_category_id", class_name: "Category"
-  belongs_to :user, foreign_key: "article_owner_id", class_name: "User"
+  belongs_to :category
+  belongs_to :user
+
   validates :title, presence: true, length: { maximum: MAX_TITLE_LENGTH }
   validates :slug, uniqueness: true
   validate :slug_not_changed
+
   before_create :set_slug
 
   private
-
-    def self.of_status(status)
-      if status == :draft
-        articles = draft.order("updated_at DESC")
-      else
-        articles = published.order("updated_at DESC")
-      end
-      articles
-    end
 
     def set_slug
       title_slug = title.parameterize

@@ -23,12 +23,12 @@ const Settings = () => {
       return <ManageCategories />;
     }
 
-    return 1;
+    return null;
   };
 
   useEffect(() => {
     setLoading(false);
-    setShowMenu(!showMenu);
+    setShowMenu(true);
   }, []);
 
   if (loading) {
@@ -46,17 +46,19 @@ const Settings = () => {
         <MenuBar showMenu={showMenu}>
           <MenuBar.Item
             label="General"
-            active
+            active={displayMenu === "General"}
             description="Page Title, Brand Name & Meta Description "
             onClick={() => setDisplayMenu("General")}
           />
           <MenuBar.Item
             label="Redirections"
+            active={displayMenu === "Redirections"}
             description="Create & configure redirection rules"
             onClick={() => setDisplayMenu("Redirections")}
           />
           <MenuBar.Item
             label="Manage Categories"
+            active={displayMenu === "Manage Category"}
             description="Edit and Reorder KB Structure"
             onClick={() => setDisplayMenu("Manage Category")}
           />

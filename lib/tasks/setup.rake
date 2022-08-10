@@ -18,9 +18,9 @@ def create_sample_data!
   puts "Seeding with sample data..."
   create_user! email: "oliver@example.com", name: "Oliver Smith"
   puts "Done! Added Oliver Smith as User"
-  create_category! category: "Example Category"
+  create_category! title: "Example Category"
   puts "Done! Added Example Category"
-  create_settings! name: "Example Site Name", password: "welcome123"
+  create_organization! name: "Example Site Name", password: "welcome123"
   puts "Done! Added Example Site Name"
 end
 
@@ -34,7 +34,7 @@ def create_category!(options = {})
   Category.create! attributes
 end
 
-def create_settings!(options = {})
+def create_organization!(options = {})
   attributes = options
-  Settings.create! attributes
+  Organization.create! attributes
 end

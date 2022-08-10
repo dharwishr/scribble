@@ -12,7 +12,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_06_26_120759) do
+ActiveRecord::Schema.define(version: 2022_08_05_140927) do
 
   create_table "articles", force: :cascade do |t|
     t.string "title"
@@ -20,13 +20,13 @@ ActiveRecord::Schema.define(version: 2022_06_26_120759) do
     t.datetime "updated_at", precision: 6, null: false
     t.string "slug", null: false
     t.string "body", null: false
-    t.integer "assigned_category_id"
+    t.integer "category_id"
     t.integer "status", default: 0, null: false
-    t.integer "article_owner_id"
+    t.integer "user_id"
   end
 
   create_table "categories", force: :cascade do |t|
-    t.string "category"
+    t.string "title"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.integer "position", null: false
@@ -37,7 +37,7 @@ ActiveRecord::Schema.define(version: 2022_06_26_120759) do
     t.string "password_digest"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.boolean "password_enabled", default: false, null: false
+    t.boolean "is_password_enabled", default: false, null: false
     t.string "authentication_token"
   end
 
@@ -52,9 +52,8 @@ ActiveRecord::Schema.define(version: 2022_06_26_120759) do
     t.string "email", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.string "authentication_token"
     t.index ["email"], name: "index_users_on_email", unique: true
   end
 
-  add_foreign_key "articles", "categories", column: "assigned_category_id"
+  add_foreign_key "articles", "categories"
 end

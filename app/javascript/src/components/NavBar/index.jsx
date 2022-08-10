@@ -31,7 +31,7 @@ const NavBar = () => {
           <div className="flex items-center justify-end">
             <Button
               label="Preview"
-              onClick={() => history.push("/public/")}
+              onClick={() => history.push("/eui/")}
               icon={ExternalLink}
               style="secondary"
             />

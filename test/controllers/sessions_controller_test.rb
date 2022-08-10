@@ -3,17 +3,14 @@
 require "test_helper"
 
 class SessionsControllerTest < ActionDispatch::IntegrationTest
-  # test "the truth" do
-  #   assert true
-  # end
   def setup
-    @setting = Settings.create(name: "Sitename", password: "12345678", password_enabled: true)
+    @organization = create(:organization)
   end
 
   def test_should_login_user_with_valid_credentials
-    post session_path, params: { login: { password: @setting.password } }, as: :json
+    post session_path, params: { password: @organization.password }, as: :json
     assert_response :success
-    assert_equal response.parsed_body["authentication_token"], @setting.authentication_token
+    assert_equal response.parsed_body["authentication_token"], @organization.authentication_token
   end
 
   def test_shouldnt_login_user_with_invalid_credentials

@@ -16,51 +16,60 @@ import organizationsApi from "apis/organizations";
 
 const Eui = () => {
   const [article, setArticle] = useState([]);
-  const [data, setData] = useState();
+  const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [siteName, setSiteName] = useState();
+  const [organizationName, setOrganizationName] = useState("");
   const { slug } = useParams();
   const history = useHistory();
-  const fetchData = async () => {
+
+  const fetchCategories = async () => {
     try {
       const response = await euiApi.list();
-      setData(response.data.categories);
-      setLoading(false);
+      setCategories(response.data.categories);
     } catch (error) {
       logger.error(error);
-      setLoading(false);
     }
   };
-  const fetchSiteData = async () => {
+
+  const fetchOrganization = async () => {
     try {
       const response = await organizationsApi.get();
-      setSiteName(response.data.site_name);
-      setLoading(false);
+      setOrganizationName(response.data.organization_name);
     } catch (error) {
       logger.error(error);
-      setLoading(false);
     }
   };
+
   const fetchArticleDetails = async () => {
     try {
       const response = await euiApi.show(slug);
-      setArticle(response.data);
+      setArticle(response.data.article);
     } catch (error) {
       logger.error(error);
     } finally {
       setLoading(false);
     }
   };
+
+  const loadData = async () => {
+    try {
+      setLoading(true);
+      await Promise.all([fetchCategories(), fetchOrganization()]);
+    } catch (error) {
+      logger.error(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    // loadData();
-    setLoading(false);
-    fetchSiteData();
-    fetchData();
+    loadData();
+  }, []);
+
+  useEffect(() => {
     if (slug) {
       fetchArticleDetails();
     }
-
-    // setShowMenu(!showMenu);
   }, [slug]);
 
   if (loading) {
@@ -75,44 +84,42 @@ const Eui = () => {
     <>
       <nav className="border max-w-7xl sticky top-0 mx-auto flex h-20 bg-white px-4">
         <Typography style="h3" className="m-auto">
-          {siteName}
+          {organizationName}
         </Typography>
       </nav>
       <div className="flex flex-row">
         <MenuBar showMenu="true">
           <div>
             <Accordion>
-              {data && data.length > 0 ? (
-                data
-                  .sort((a, b) => (a.position > b.position ? 1 : -1))
-                  .map(each => (
-                    <Accordion.Item
-                      title={each.category}
-                      key={each.position}
-                      className="border-b-2"
-                    >
-                      {each.articles.map(article => (
-                        <Typography
-                          style="body2"
-                          key={article.id}
-                          active={slug === article.slug}
-                          className="cursor-pointer"
-                          onClick={() => {
-                            history.push(`/public/${article.slug}`);
-                          }}
-                        >
-                          {article.title}
-                        </Typography>
-                      ))}
-                    </Accordion.Item>
-                  ))
+              {categories?.length ? (
+                categories.map(category => (
+                  <Accordion.Item
+                    title={category.title}
+                    key={category.position}
+                    className="border-b-2"
+                  >
+                    {category.articles.map(article => (
+                      <Typography
+                        style="body2"
+                        key={article.id}
+                        active={slug === article.slug}
+                        className="cursor-pointer"
+                        onClick={() => {
+                          history.push(`/eui/${article.slug}`);
+                        }}
+                      >
+                        {article.title}
+                      </Typography>
+                    ))}
+                  </Accordion.Item>
+                ))
               ) : (
                 <Accordion.Item title="No Data found"></Accordion.Item>
               )}
             </Accordion>
           </div>
         </MenuBar>
-        {slug ? (
+        {slug && (
           <Container>
             <div className="mt-5">
               <Typography style="h2" className="mb-4">
@@ -128,8 +135,6 @@ const Eui = () => {
               </Typography>
             </div>
           </Container>
-        ) : (
-          <div></div>
         )}
       </div>
     </>

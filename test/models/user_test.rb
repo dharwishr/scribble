@@ -3,9 +3,6 @@
 require "test_helper"
 
 class UserTest < ActiveSupport::TestCase
-  # test "the truth" do
-  #   assert true
-  # end
   def setup
     @user = build(:user)
   end
@@ -63,13 +60,5 @@ class UserTest < ActiveSupport::TestCase
     @user.email = uppercase_email
     @user.save!
     assert_equal uppercase_email.downcase, @user.email
-  end
-
-  def test_users_should_have_unique_auth_token
-    @user.save!
-    second_user = create(:user)
-
-    assert_not_same @user.authentication_token,
-      second_user.authentication_token
   end
 end

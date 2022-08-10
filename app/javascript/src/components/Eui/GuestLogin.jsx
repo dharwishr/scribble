@@ -11,38 +11,42 @@ import LoginImage from "images/login.png";
 import { setToLocalStorage } from "utils/storage";
 
 const GuestLogin = () => {
-  const [password, setPassword] = useState();
+  const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(true);
-  const [siteName, setSiteName] = useState();
+  const [organizationName, setOrganizationName] = useState();
 
-  const fetchSiteName = async () => {
+  const fetchOrganizationName = async () => {
     try {
+      setLoading(true);
       const response = await organizationsApi.get();
-      setSiteName(response.data.site_name);
-      setLoading(false);
+      setOrganizationName(response.data.organization_name);
     } catch (error) {
       logger.error(error);
+    } finally {
       setLoading(false);
     }
   };
+
   const handleSubmit = async () => {
-    setLoading(true);
     try {
+      setLoading(true);
       const response = await authApi.login({ password });
       setToLocalStorage({
         authToken: response.data.authentication_token,
       });
       setAuthHeaders();
-      setLoading(false);
-      window.location.href = "/public";
+      window.location.href = "/eui";
     } catch (error) {
       logger.error(error);
+    } finally {
       setLoading(false);
     }
   };
+
   useEffect(() => {
-    fetchSiteName();
+    fetchOrganizationName();
   }, []);
+
   if (loading) {
     return (
       <div className="h-screen">
@@ -55,17 +59,17 @@ const GuestLogin = () => {
     <>
       <nav className="border max-w-7xl sticky top-0 mx-auto flex h-20 bg-white px-4">
         <Typography style="h3" className="m-auto">
-          {siteName}
+          {organizationName}
         </Typography>
       </nav>
-
       <div className="m-auto mt-10 max-w-md">
         <img src={LoginImage} alt="Login" className="m-auto mb-16 max-w-xs" />
-        <Typography style="h2">{siteName} is password protected!</Typography>
-        <Typography style="body2" className="mb-5">
-          Enter the password to gain access to {siteName}
+        <Typography style="h2">
+          {organizationName} is password protected!
         </Typography>
-        {/* <form onSubmit={}> */}
+        <Typography style="body2" className="mb-5">
+          Enter the password to gain access to {organizationName}
+        </Typography>
         <Input
           className="mb-6"
           required
@@ -84,7 +88,6 @@ const GuestLogin = () => {
             handleSubmit();
           }}
         />
-        {/* </form> */}
       </div>
     </>
   );

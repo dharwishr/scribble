@@ -1,7 +1,7 @@
 import React from "react";
 import { useState } from "react";
 
-import { ActionDropdown, Button } from "@bigbinary/neetoui";
+import { Dropdown, Button } from "@bigbinary/neetoui";
 import { Input, Textarea, Select } from "@bigbinary/neetoui/formik";
 import { Formik, Form } from "formik";
 import { useHistory } from "react-router-dom";
@@ -28,18 +28,18 @@ const ArticleForm = ({ article, type, categories }) => {
           payload: {
             title: values.title,
             body: values.body,
-            assigned_category_id: values.category.value,
+            category_id: values.category.value,
             status: articleStatus,
-            article_owner_id: 1,
+            user_id: 1,
           },
         });
       } else {
         await articlesApi.create({
           title: values.title,
           body: values.body,
-          assigned_category_id: values.category.value,
+          category_id: values.category.value,
           status: articleStatus,
-          article_owner_id: 1,
+          user_id: 1,
         });
       }
       history.push("/");
@@ -79,35 +79,38 @@ const ArticleForm = ({ article, type, categories }) => {
                 isSearchable
                 options={categories.map(category => ({
                   value: category.id,
-                  label: category.category,
+                  label: category.title,
                 }))}
                 placeholder="Select a Category"
                 required
               />
             </div>
             <Textarea label="Article Body" name="body" rows="20" />
-            <div className="flex flex-row space-x-5">
-              <Button
-                type="submit"
-                label={"Save Changes"}
-                size="large"
-                style="primary"
-                className="mr-3"
-                disabled={isSubmitting}
-                loading={isSubmitting}
-                onClick={() => setSubmitted(true)}
-              />
-              <ActionDropdown
-                label={
-                  articleStatus === "draft" ? "Save Draft" : "Publish Article"
-                }
-                type="submit"
-                // onClick={handleSubmit(onSubmit)}
-                style="primary"
-              >
-                <li onClick={() => setArticleStatus("draft")}>Draft</li>
-                <li onClick={() => setArticleStatus("published")}>Publish</li>
-              </ActionDropdown>
+            <div className="mt-3 flex flex-row space-x-2">
+              <div className="flex space-x-5">
+                <div className="flex">
+                  <Button
+                    type="submit"
+                    label={
+                      articleStatus === "draft"
+                        ? "Save Draft"
+                        : "Publish Article"
+                    }
+                    size="medium"
+                    style="primary"
+                    disabled={isSubmitting}
+                    loading={isSubmitting}
+                    onClick={() => setSubmitted(true)}
+                  />
+                  <Dropdown position="bottom-end">
+                    <li onClick={() => setArticleStatus("draft")}>Draft</li>
+                    <li onClick={() => setArticleStatus("published")}>
+                      Publish
+                    </li>
+                  </Dropdown>
+                </div>
+                <Button style="text" label="Cancel" to="/" />
+              </div>
             </div>
           </Form>
         )}

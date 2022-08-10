@@ -10,6 +10,12 @@ const DashboradTable = ({
   destroyArticle,
   foundArticles,
 }) => {
+  const CURRENT_PAGE_NUMBER = "1";
+  const DEFAULT_PAGE_SIZE = "10";
+  const LOCALE = {
+    emptyText: "No articles added yet",
+  };
+
   const history = useHistory();
   const [showAlertSmall, setShowAlertSmall] = useState(false);
 
@@ -94,11 +100,13 @@ const DashboradTable = ({
       ),
     },
   ];
+
   return (
     <Table
       columnData={articleColumns.filter(item => item.visibility)}
-      currentPageNumber={1}
-      defaultPageSize={10}
+      locale={LOCALE}
+      currentPageNumber={CURRENT_PAGE_NUMBER}
+      defaultPageSize={DEFAULT_PAGE_SIZE}
       handlePageChange={function noRefCheck() {}}
       onRowClick={function noRefCheck() {}}
       onRowSelect={function noRefCheck() {}}

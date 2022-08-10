@@ -20,15 +20,17 @@ import { getFromLocalStorage } from "utils/storage";
 const App = () => {
   const [loading, setLoading] = useState(true);
   const authToken = getFromLocalStorage("authToken");
-  const [isPasswordEnabled, setIsPasswordEnabled] = useState();
+  const [isPasswordEnabled, setIsPasswordEnabled] = useState(true);
   const isLoggedIn = !either(isNil, isEmpty)(authToken);
+
   const fetchRedirections = async () => {
     try {
+      setLoading(true);
       const organizations = await organizationsApi.get();
       setIsPasswordEnabled(organizations.data.is_password_enabled);
-      setLoading(false);
     } catch (error) {
       logger.error(error);
+    } finally {
       setLoading(false);
     }
   };
@@ -55,16 +57,16 @@ const App = () => {
         <Route exact path="/article/:slug/edit" component={EditArticle} />
         <Route exact path="/settings" component={Settings} />
         <Route exact path="/login" component={GuestLogin} />
-        <Route exact path="/public/:slug" component={Eui} />
+        <Route exact path="/eui/:slug" component={Eui} />
         {isPasswordEnabled ? (
           <PrivateRoute
-            path="/public/"
+            path="/eui/"
             redirectRoute="/login"
             condition={isLoggedIn}
             component={Eui}
           />
         ) : (
-          <Route exact path="/public" component={Eui} />
+          <Route exact path="/eui" component={Eui} />
         )}
       </Switch>
     </Router>
