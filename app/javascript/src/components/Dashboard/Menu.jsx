@@ -4,19 +4,25 @@ import { Search, Plus, Check, Close } from "@bigbinary/neeto-icons";
 import { Typography, Input, Button } from "@bigbinary/neetoui";
 import { MenuBar } from "@bigbinary/neetoui/layouts";
 
+import { searchWithTitle } from "common/utils";
+
 const Menu = ({
   counts,
   displayedArticles,
-  sortArticles,
-  searchWhichCategory,
-  searchCategory,
+  categories,
+  setDisplayedArticles,
   categoryTitle,
   setCategoryTitle,
   createCategory,
-  foundCategories,
 }) => {
   const [isSearchCollapsed, setIsSearchCollapsed] = useState(true);
   const [isInputCollapsed, setIsInputCollapsed] = useState(true);
+  const [searchCategory, setSearchCategory] = useState("");
+
+  const searchInputOnCollapse = () => {
+    setSearchCategory("");
+    setIsSearchCollapsed(true);
+  };
 
   return (
     <MenuBar showMenu={true} title="Articles">
@@ -25,7 +31,7 @@ const Menu = ({
         count={counts.total}
         active={displayedArticles.status === "All"}
         onClick={() => {
-          sortArticles("All");
+          setDisplayedArticles({ ...displayedArticles, status: "All" });
         }}
       />
       <MenuBar.Block
@@ -33,7 +39,7 @@ const Menu = ({
         count={counts.draft}
         active={displayedArticles.status === "draft"}
         onClick={() => {
-          sortArticles("draft");
+          setDisplayedArticles({ ...displayedArticles, status: "draft" });
         }}
       />
       <MenuBar.Block
@@ -41,7 +47,7 @@ const Menu = ({
         count={counts.published}
         active={displayedArticles.status === "published"}
         onClick={() => {
-          sortArticles("published");
+          setDisplayedArticles({ ...displayedArticles, status: "published" });
         }}
       />
       <MenuBar.SubTitle
@@ -67,10 +73,10 @@ const Menu = ({
       </MenuBar.SubTitle>
       <MenuBar.Search
         type="search"
-        onChange={searchWhichCategory}
+        onChange={e => setSearchCategory(e.target.value)}
         value={searchCategory}
         collapse={isSearchCollapsed}
-        onCollapse={() => setIsSearchCollapsed(true)}
+        onCollapse={searchInputOnCollapse}
         placeholder="Search"
       />
       {!isInputCollapsed && (
@@ -100,26 +106,32 @@ const Menu = ({
           />
         </div>
       )}
-      {!foundCategories && (
+      {categories && (
         <MenuBar.Block
           key={"All"}
           label={"All"}
           active={displayedArticles.category === "All"}
           count={"10"}
           onClick={() => {
-            sortArticles(displayedArticles.status, "All");
+            setDisplayedArticles({
+              ...displayedArticles,
+              category: "All",
+            });
           }}
         />
       )}
-      {foundCategories?.length ? (
-        foundCategories.map(category => (
+      {searchWithTitle(categories, searchCategory)?.length ? (
+        searchWithTitle(categories, searchCategory).map(category => (
           <MenuBar.Block
             key={category.position}
             label={category.title}
             active={displayedArticles.category === category.title}
             count={category.count}
             onClick={() => {
-              sortArticles(displayedArticles.status, category.title);
+              setDisplayedArticles({
+                ...displayedArticles,
+                category: category.title,
+              });
             }}
           />
         ))

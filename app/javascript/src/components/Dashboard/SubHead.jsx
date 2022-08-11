@@ -6,8 +6,8 @@ import { SubHeader } from "@bigbinary/neetoui/layouts";
 import { useHistory } from "react-router-dom";
 
 const SubHead = ({
-  searchWhichArticle,
   searchArticle,
+  setSearchArticle,
   columnVisibility,
   setColumnVisibility,
 }) => {
@@ -19,7 +19,7 @@ const SubHead = ({
         <>
           <Input
             placeholder="Search"
-            onChange={searchWhichArticle}
+            onChange={e => setSearchArticle(e.target.value)}
             value={searchArticle}
             prefix={<Search />}
           />
@@ -119,7 +119,7 @@ const SubHead = ({
           />
         </>
       }
-      className={"pt-6"}
+      className="pt-6"
     />
   );
 };

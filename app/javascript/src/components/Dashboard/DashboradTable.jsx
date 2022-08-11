@@ -5,19 +5,25 @@ import { Edit, Delete } from "@bigbinary/neeto-icons";
 import { Table, Button, Alert, Tag } from "@bigbinary/neetoui";
 import { useHistory } from "react-router-dom";
 
+import { searchWithTitle } from "common/utils";
+
+import { sortArticles } from "./utils";
+
 const DashboradTable = ({
   columnVisibility,
   destroyArticle,
-  foundArticles,
+  articles,
+  searchArticle,
+  displayedArticles,
 }) => {
-  const CURRENT_PAGE_NUMBER = "1";
-  const DEFAULT_PAGE_SIZE = "10";
+  const DEFAULT_PAGE_SIZE = "15";
   const LOCALE = {
     emptyText: "No articles added yet",
   };
 
   const history = useHistory();
   const [showAlertSmall, setShowAlertSmall] = useState(false);
+  const [pageNo, setPageNo] = useState(1);
 
   const articleColumns = [
     {
@@ -42,11 +48,11 @@ const DashboradTable = ({
     },
     {
       title: "CATEGORY",
-      dataIndex: "category",
-      key: "category",
+      dataIndex: "assigned_category",
+      key: "assigned_category",
       visibility: columnVisibility.category,
       render: (_, record) => (
-        <Tag label={record.category} indicatorColor="gray" />
+        <Tag label={record.assigned_category.title} indicatorColor="gray" />
       ),
     },
     {
@@ -105,12 +111,15 @@ const DashboradTable = ({
     <Table
       columnData={articleColumns.filter(item => item.visibility)}
       locale={LOCALE}
-      currentPageNumber={CURRENT_PAGE_NUMBER}
+      currentPageNumber={pageNo}
       defaultPageSize={DEFAULT_PAGE_SIZE}
-      handlePageChange={function noRefCheck() {}}
-      onRowClick={function noRefCheck() {}}
-      onRowSelect={function noRefCheck() {}}
-      rowData={foundArticles}
+      handlePageChange={setPageNo}
+      onRowClick={() => {}}
+      onRowSelect={() => {}}
+      rowData={searchWithTitle(
+        sortArticles(articles, displayedArticles),
+        searchArticle
+      )}
     />
   );
 };

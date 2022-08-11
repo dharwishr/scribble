@@ -8,6 +8,7 @@ import { ToastContainer } from "react-toastify";
 import { registerIntercepts, setAuthHeaders } from "apis/axios";
 import organizationsApi from "apis/organizations";
 import { initializeLogger } from "common/logger";
+import Analytics from "components/Analytics";
 import CreateArticle from "components/Articles/CreateArticle";
 import EditArticle from "components/Articles/EditArticle";
 import PrivateRoute from "components/Common/PrivateRoute";
@@ -56,6 +57,7 @@ const App = () => {
         <Route exact path="/article/create" component={CreateArticle} />
         <Route exact path="/article/:slug/edit" component={EditArticle} />
         <Route exact path="/settings" component={Settings} />
+        <Route exact path="/analytics" component={Analytics} />
         <Route exact path="/login" component={GuestLogin} />
         <Route exact path="/eui/:slug" component={Eui} />
         {isPasswordEnabled ? (

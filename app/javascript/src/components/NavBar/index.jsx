@@ -2,7 +2,7 @@ import React from "react";
 
 import { ExternalLink } from "@bigbinary/neeto-icons";
 import { Button } from "@bigbinary/neetoui";
-import { useHistory } from "react-router-dom";
+import { useHistory, Link } from "react-router-dom";
 
 import NavItem from "./NavItem";
 
@@ -15,17 +15,15 @@ const NavBar = () => {
         <div className="flex h-16 justify-between">
           <div className="flex px-2 lg:px-0">
             <div className="hidden lg:flex">
-              <NavItem name="Scribble" textColor="text-black-500" path="/" />
-              <NavItem
-                name="Articles"
-                textColor="neeto-ui-text-gray-500 hover:text-indigo-500 active:text-indigo-500"
-                path="/"
-              />
-              <NavItem
-                name="Settings"
-                textColor="neeto-ui-text-gray-500 hover:text-indigo-500 active:text-indigo-500"
-                path="/settings"
-              />
+              <Link
+                className="mr-3 inline-flex items-center px-1 text-sm font-semibold leading-5 hover:text-indigo-500"
+                to="/"
+              >
+                Scribble
+              </Link>
+              <NavItem name="Articles" path="/" />
+              <NavItem name="Settings" path="/settings" />
+              <NavItem name="Analytics" path="/analytics" />
             </div>
           </div>
           <div className="flex items-center justify-end">

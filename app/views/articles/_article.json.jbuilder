@@ -12,3 +12,4 @@ json.assigned_category do
     :id,
     :title
 end
+json.visits article.visits

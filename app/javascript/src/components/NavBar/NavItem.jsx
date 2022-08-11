@@ -1,16 +1,19 @@
 import React from "react";
 
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 
-const NavItem = ({ iconClass, name, path, textColor }) => (
-  <Link
+const NavItem = ({ name, path }) => (
+  <NavLink
+    exact={path === "/"}
     to={path}
-    className="mr-3 inline-flex items-center px-1 pt-1
-      text-sm font-semibold leading-5"
+    className="mr-3 inline-flex items-center px-1 text-sm font-semibold leading-5 hover:text-indigo-500"
+    activeStyle={{
+      fontWeight: "bold",
+      color: "#667eea",
+    }}
   >
-    {iconClass && <i className={`${iconClass}`}></i>}
-    <span className={`${textColor}`}>{name}</span>
-  </Link>
+    {name}
+  </NavLink>
 );
 
 export default NavItem;
