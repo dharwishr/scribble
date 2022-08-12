@@ -1,11 +1,14 @@
 import axios from "axios";
 
-const list = () => axios.get("/eui/categories");
+const listCategories = () => axios.get("/eui/categories");
+
+const listArticles = () => axios.get("/eui/articles");
 
 const show = slug => axios.get(`/eui/articles/${slug}`);
 
 const euiApi = {
-  list,
+  listCategories,
+  listArticles,
   show,
 };
 

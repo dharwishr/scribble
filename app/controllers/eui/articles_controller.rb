@@ -4,6 +4,11 @@ class Eui::ArticlesController < ApplicationController
   before_action :load_article!, only: %i[show]
   after_action :increment_visits!, only: %i[show]
 
+  def index
+    articles = Article.all
+    @published_articles = articles.published
+  end
+
   def show
     render
   end

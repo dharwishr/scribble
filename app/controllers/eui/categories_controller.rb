@@ -2,6 +2,6 @@
 
 class Eui::CategoriesController < ApplicationController
   def index
-    @categories = Category.all.order("position ASC")
+    @categories = Category.joins(:articles).where(articles: { status: "published" }).order("position ASC")
   end
 end

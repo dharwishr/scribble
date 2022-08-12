@@ -6,7 +6,7 @@ Rails.application.routes.draw do
     resources :categories, except: %i[new edit]
     resources :users, only: %i[create index]
     namespace :eui do
-      resources :articles, only: %i[show]
+      resources :articles, only: %i[index show]
       resources :categories, only: %i[index]
     end
     resource :session, only: %i[create destroy]
