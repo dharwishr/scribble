@@ -19,4 +19,15 @@ class VersionsControllerTest < ActionDispatch::IntegrationTest
     get article_path(@article.slug) + "/versions", headers: headers
     response_json = response.parsed_body
   end
+
+  def test_check_article_previous_version
+    article_title_1 = "#{@article.title}-(updated)-1"
+    put article_path(@article.slug), params: { article: { title: article_title_1 } }, headers: headers
+    article_title_2 = "#{@article.title}-(updated)-2"
+    put article_path(@article.slug), params: { article: { title: article_title_2 } }, headers: headers
+    get article_path(@article.slug) + "/versions/1", headers: headers
+    assert_response :success
+    response_json = response.parsed_body["article_version"]["title"]
+    assert_equal response_json, article_title_1
+  end
 end
