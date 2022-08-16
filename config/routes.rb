@@ -2,7 +2,9 @@
 
 Rails.application.routes.draw do
   constraints(lambda { |req| req.format == :json }) do
-    resources :articles, except: %i[new edit], param: :slug
+    resources :articles, except: %i[new edit], param: :slug do
+      resources :versions, only: %i[index show], param: :id
+    end
     resources :categories, except: %i[new edit]
     resources :users, only: %i[create index]
     namespace :eui do

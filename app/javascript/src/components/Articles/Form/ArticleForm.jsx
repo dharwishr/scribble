@@ -49,14 +49,17 @@ const ArticleForm = ({ article, type, categories }) => {
   };
 
   return (
-    <div>
+    <div className="mx-auto mt-10 h-full w-1/2">
       <Formik
         initialValues={
           article
             ? {
                 title: article.title,
                 body: article.body,
-                category: article.assigned_category.id,
+                category: {
+                  label: article.assigned_category.title,
+                  value: article.assigned_category.id,
+                },
               }
             : {
                 title: ``,

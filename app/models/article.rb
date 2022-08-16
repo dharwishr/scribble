@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class Article < ApplicationRecord
+  has_paper_trail on: %i[create update], skip: [:visits]
+
   MAX_TITLE_LENGTH = 50
 
   enum status: { draft: 0, published: 1 }

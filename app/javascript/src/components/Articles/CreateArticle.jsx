@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import { PageLoader } from "@bigbinary/neetoui";
 
 import categoriesApi from "apis/categories";
-import Container from "components/Container";
+import NavBar from "components/NavBar";
 
 import ArticleForm from "./Form/ArticleForm";
 
@@ -32,9 +32,10 @@ const CreateArticle = () => {
   }
 
   return (
-    <Container>
+    <div className="h-full w-screen">
+      <NavBar />
       <ArticleForm categories={categories} />
-    </Container>
+    </div>
   );
 };
 

@@ -93,7 +93,7 @@ const Dashboard = () => {
 
   return (
     <div>
-      <NavBar></NavBar>
+      <NavBar />
       <div className="flex">
         <Menu
           counts={{
