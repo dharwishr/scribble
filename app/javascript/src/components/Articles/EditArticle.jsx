@@ -77,7 +77,7 @@ const EditArticle = () => {
 
   return (
     <>
-      <NavBar articleStatus={article.status}></NavBar>
+      <NavBar articleStatus={article.status} />
       <div className="flex h-full w-screen justify-between">
         <ArticleForm type="update" categories={categories} article={article} />
         <VersionHistory

@@ -2,8 +2,7 @@
 
 class ArticlesController < ApplicationController
   before_action :load_article!, only: %i[show update destroy]
-  before_action :destroy_versions!, only: %i[destroy]
-  before_action :paper_trail_events, only: %i[update]
+  before_action :rename_article_version_event, only: %i[update]
 
   def index
     articles = Article.all
@@ -45,11 +44,7 @@ class ArticlesController < ApplicationController
       @article = Article.find_by!(slug: params[:slug])
     end
 
-    def destroy_versions!
-      @article.versions.destroy_all
-    end
-
-    def paper_trail_events
+    def rename_article_version_event
       @article.paper_trail_event = "edited"
       if @article.status != article_params[:status]
         @article.paper_trail_event = article_params[:status]
