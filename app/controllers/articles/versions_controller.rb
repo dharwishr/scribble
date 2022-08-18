@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-class VersionsController < ApplicationController
-  before_action :load_article_versions!, only: %i[index show]
+class Articles::VersionsController < ApplicationController
+  before_action :load_article!, only: %i[index show]
   before_action :load_version!, only: %i[show]
 
   def index
@@ -14,7 +14,7 @@ class VersionsController < ApplicationController
 
   private
 
-    def load_article_versions!
+    def load_article!
       @article = Article.find_by!(slug: params[:article_slug])
     end
 

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Article < ApplicationRecord
-  has_paper_trail on: %i[create update], skip: [:visits]
+  has_paper_trail on: %i[create update], skip: %i[visits]
 
   MAX_TITLE_LENGTH = 50
 

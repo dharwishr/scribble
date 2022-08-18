@@ -8,8 +8,8 @@ import categoriesApi from "apis/categories";
 import versionsApi from "apis/versions";
 import NavBar from "components/NavBar";
 
-import ArticleForm from "./Form/ArticleForm";
-import RestoreArticleModal from "./Modal/RestoreArticleModal";
+import { Article as ArticleForm } from "./Form/Article";
+import { RestoreArticle as RestoreArticleModal } from "./Modal/RestoreArticle";
 import VersionHistory from "./VersionHistory";
 
 const EditArticle = () => {
@@ -22,7 +22,7 @@ const EditArticle = () => {
   const { slug } = useParams();
 
   useEffect(() => {
-    loadData();
+    fetchData();
   }, []);
 
   const fetchCategoryDetails = async () => {
@@ -52,7 +52,7 @@ const EditArticle = () => {
     }
   };
 
-  const loadData = async () => {
+  const fetchData = async () => {
     try {
       setPageLoading(true);
       await Promise.all([

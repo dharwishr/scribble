@@ -5,7 +5,7 @@ import { PageLoader } from "@bigbinary/neetoui";
 import categoriesApi from "apis/categories";
 import NavBar from "components/NavBar";
 
-import ArticleForm from "./Form/ArticleForm";
+import { Article as ArticleForm } from "./Form/Article";
 
 const CreateArticle = () => {
   const [categories, setCategories] = useState([]);

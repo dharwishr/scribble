@@ -9,7 +9,7 @@ import * as yup from "yup";
 
 import articlesApi from "apis/articles";
 
-const ArticleForm = ({ article, type, categories }) => {
+const Article = ({ article, type, categories }) => {
   const [submitted, setSubmitted] = useState(false);
   const [articleStatus, setArticleStatus] = useState("draft");
   const history = useHistory();
@@ -122,4 +122,4 @@ const ArticleForm = ({ article, type, categories }) => {
   );
 };
 
-export default ArticleForm;
+export { Article };

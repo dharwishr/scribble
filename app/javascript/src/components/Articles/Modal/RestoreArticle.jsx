@@ -5,7 +5,7 @@ import { useHistory } from "react-router-dom";
 
 import articlesApi from "apis/articles";
 
-const RestoreArticleModal = ({
+const RestoreArticle = ({
   showModal,
   setShowModal,
   slug,
@@ -13,7 +13,7 @@ const RestoreArticleModal = ({
 }) => {
   const history = useHistory();
 
-  const versionRestoreHandle = async () => {
+  const restoreVersionHandle = async () => {
     try {
       await articlesApi.update({
         slug,
@@ -62,7 +62,7 @@ const RestoreArticleModal = ({
       <Modal.Footer className="space-x-2">
         <Button
           label="Continue"
-          onClick={() => versionRestoreHandle()}
+          onClick={() => restoreVersionHandle()}
           size="large"
         />
         <Button
@@ -75,4 +75,4 @@ const RestoreArticleModal = ({
     </Modal>
   );
 };
-export default RestoreArticleModal;
+export { RestoreArticle };

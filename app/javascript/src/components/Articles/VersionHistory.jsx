@@ -10,9 +10,9 @@ const VersionHistory = ({
   articleVersions,
   slug,
 }) => {
-  const versionOnClickHandle = async id => {
+  const versionOnClickHandle = async versionId => {
     try {
-      const response = await versionsApi.show(slug, id);
+      const response = await versionsApi.show({ slug, versionId });
       setRestoringArticle(response.data.article_version);
       setShowModal(true);
     } catch (error) {
