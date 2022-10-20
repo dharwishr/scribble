@@ -1,12 +1,12 @@
 import React from "react";
 
 import { ExternalLink } from "@bigbinary/neeto-icons";
-import { Button } from "@bigbinary/neetoui";
+import { Button, Tag } from "@bigbinary/neetoui";
 import { useHistory, Link } from "react-router-dom";
 
 import NavItem from "./NavItem";
 
-const NavBar = () => {
+const NavBar = ({ articleStatus }) => {
   const history = useHistory();
 
   return (
@@ -27,6 +27,24 @@ const NavBar = () => {
             </div>
           </div>
           <div className="flex items-center justify-end">
+            {articleStatus &&
+              (articleStatus === "draft" ? (
+                <Tag
+                  style="outline"
+                  size="large"
+                  color="yellow"
+                  label="Draft"
+                  className="mr-5"
+                />
+              ) : (
+                <Tag
+                  style="outline"
+                  size="large"
+                  color="green"
+                  label="Published"
+                  className="mr-5"
+                />
+              ))}
             <Button
               label="Preview"
               onClick={() => history.push("/eui/")}

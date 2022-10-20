@@ -2,6 +2,7 @@
 
 class ArticlesController < ApplicationController
   before_action :load_article!, only: %i[show update destroy]
+  before_action :rename_article_version_event, only: %i[update]
 
   def index
     articles = Article.all
@@ -21,7 +22,11 @@ class ArticlesController < ApplicationController
 
   def update
     @article.update!(article_params)
-    respond_with_success(t("successfully_updated", entity: "Article"))
+    if params.key?(:restore)
+      respond_with_success(t("successfully_restored", entity: "Article"))
+    else
+      respond_with_success(t("successfully_updated", entity: "Article"))
+    end
   end
 
   def destroy
@@ -37,5 +42,15 @@ class ArticlesController < ApplicationController
 
     def load_article!
       @article = Article.find_by!(slug: params[:slug])
+    end
+
+    def rename_article_version_event
+      @article.paper_trail_event = "edited"
+      if @article.status != article_params[:status]
+        @article.paper_trail_event = article_params[:status]
+      end
+      if params.key?(:restore)
+        @article.paper_trail_event = "restored"
+      end
     end
 end

@@ -6,8 +6,10 @@ const show = slug => axios.get(`/articles/${slug}`);
 
 const create = payload => axios.post("/articles/", { article: payload });
 
-const update = ({ slug, payload }) =>
-  axios.put(`/articles/${slug}`, { article: payload });
+const update = ({ slug, payload, restore }) => {
+  const path = restore ? `/articles/${slug}?restore` : `/articles/${slug}`;
+  return axios.put(path, { article: payload });
+};
 
 const destroy = id => axios.delete(`/articles/${id}`);
 

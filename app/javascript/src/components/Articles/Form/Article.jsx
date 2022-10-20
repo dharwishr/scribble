@@ -9,7 +9,7 @@ import * as yup from "yup";
 
 import articlesApi from "apis/articles";
 
-const ArticleForm = ({ article, type, categories }) => {
+const Article = ({ article, type, categories }) => {
   const [submitted, setSubmitted] = useState(false);
   const [articleStatus, setArticleStatus] = useState("draft");
   const history = useHistory();
@@ -49,14 +49,17 @@ const ArticleForm = ({ article, type, categories }) => {
   };
 
   return (
-    <div>
+    <div className="mx-auto mt-10 h-full w-1/2">
       <Formik
         initialValues={
           article
             ? {
                 title: article.title,
                 body: article.body,
-                category: article.assigned_category.id,
+                category: {
+                  label: article.assigned_category.title,
+                  value: article.assigned_category.id,
+                },
               }
             : {
                 title: ``,
@@ -119,4 +122,4 @@ const ArticleForm = ({ article, type, categories }) => {
   );
 };
 
-export default ArticleForm;
+export { Article };

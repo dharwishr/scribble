@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class Article < ApplicationRecord
+  has_paper_trail on: %i[create update], skip: %i[visits]
+
   MAX_TITLE_LENGTH = 50
 
   enum status: { draft: 0, published: 1 }
@@ -13,6 +15,7 @@ class Article < ApplicationRecord
   validate :slug_not_changed
 
   before_create :set_slug
+  before_destroy :destroy_versions!
 
   private
 
@@ -37,5 +40,9 @@ class Article < ApplicationRecord
       if slug_changed? && self.persisted?
         errors.add(:slug, t("article.slug.immutable"))
       end
+    end
+
+    def destroy_versions!
+      self.versions.destroy_all
     end
 end

@@ -4,8 +4,12 @@ source "https://rubygems.org"
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
 ruby "3.0.2"
+# Use acts_as_list to manage order of table while changing position
 gem "acts_as_list"
+# Use paper_trail to track changes of models (for versioning or auditing)
+gem "paper_trail"
 gem "react-rails"
+# Use strftime to convert timestamp to human readable form
 gem "strftime"
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails', branch: 'main'
 gem "rails", "~> 6.1.4", ">= 6.1.4.1"
